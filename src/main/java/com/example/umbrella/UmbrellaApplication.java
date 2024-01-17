@@ -10,6 +10,7 @@ public class UmbrellaApplication {
 		SpringApplication.run(UmbrellaApplication.class, args);
 		// 하하 내가 점령했다
 		// 하이
+		// 안녕 
 	}
 //아무거나
 
