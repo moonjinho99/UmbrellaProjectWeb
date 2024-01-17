@@ -9,6 +9,6 @@ public class UmbrellaApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(UmbrellaApplication.class, args);
 	}
-
+//아무거나
 
 }
