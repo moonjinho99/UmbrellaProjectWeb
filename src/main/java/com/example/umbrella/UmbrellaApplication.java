@@ -9,13 +9,7 @@ public class UmbrellaApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(UmbrellaApplication.class, args);
 		// 하하 내가 점령했다
-		// 하이
-
-		//어림도 없지 엔젤릭 버스터가 점령햇다
-
-		// 안녕
-		//아무거나2
-		//외 않되
+		// 하이용
 	}
 //아무거나
 
