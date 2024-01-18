@@ -8,10 +8,7 @@ public class UmbrellaApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(UmbrellaApplication.class, args);
-		// 하하 내가 점령했다
-		// 하이용
 
-		//우리는 비둘기다
 	}
 //아무거나
 
