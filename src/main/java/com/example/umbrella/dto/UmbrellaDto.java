@@ -2,7 +2,7 @@ package com.example.umbrella.dto;
 
 import java.util.Date;
 
-public class UmbrellaCode {
+public class UmbrellaDto {
 
     int umbrellacode;
     int price;
