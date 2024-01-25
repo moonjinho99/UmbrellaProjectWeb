@@ -22,7 +22,7 @@ public class MemberController {
     @GetMapping("/login.do")
     public String loginGET(){
         List<MemberDto> memberDtoList = memberService.getAllMemberList();
-        System.out.print(memberDtoList);
+        System.out.print("멤버 리스트 : "+memberDtoList);
         return "member/login";
     }
 
