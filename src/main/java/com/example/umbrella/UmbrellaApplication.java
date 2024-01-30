@@ -10,5 +10,4 @@ public class UmbrellaApplication {
 		SpringApplication.run(UmbrellaApplication.class, args);
 
 	}
-
 }
