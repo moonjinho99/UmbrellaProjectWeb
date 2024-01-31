@@ -2,6 +2,7 @@ package com.example.umbrella.controller;
 
 import com.example.umbrella.Service.MemberService;
 import com.example.umbrella.dto.MemberDto;
+import com.example.umbrella.dto.UmbrellaDto;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -48,6 +49,8 @@ public class MemberController {
     @ResponseBody
     public String idCheck(@RequestBody MemberDto memberDto){
 
+        System.out.println("중복아이디 : "+memberDto);
+
         if(!(memberDto.getId().equals("qwer")))
         {
             return "success";
@@ -74,7 +77,5 @@ public class MemberController {
         }
 
     }
-
-
 
 }

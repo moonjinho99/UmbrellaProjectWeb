@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.umbrella.mapper.UmbrellaMapper">
+
+    <select id="getUmbrellaList" resultType="com.example.umbrella.dto.UmbrellaDto">
+        select umbrellacode,price,rentalId,photo,rentalStatus,rentalTime,returnTime from umbrella u join lockerdetail l on u.umbrellacode = l.umbrellacode where l.lockercode = #{lockercode}
+    </select>
+
+</mapper>
