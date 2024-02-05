@@ -1,13 +1,11 @@
-<%@page import="com.RootFinder.dao.CoseDAO"%>
-<%@page import="com.RootFinder.dto.CoseListDTO"%>
-<%@page import="java.util.ArrayList"%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>UmbrellaMain</title>
-    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6223596a1a53a72a213eade806c58952"></script>
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6223596a1a53a72a213eade806c58952&libraries=services"></script>
     <script type="text/javascript" src="/script/main.js"></script>
+    <script  src="http://code.jquery.com/jquery-latest.min.js"></script>
     <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
@@ -45,14 +43,14 @@
         </li>
     </ul>
 </nav>
-<div id="map" style="width: 83%; height: 665px;"></div>
+<div id="map" style="width: 83%; height: 90vh;"></div>
 </div>
 <script>
     var mapContainer = document.getElementById('map'); // 지도를 표시할 div
     var map;
     var geocoder = new kakao.maps.services.Geocoder();
+    var locations=[];
 
-    // HTML5의 geolocation으로 사용할 수 있는지 확인합니다
     if (navigator.geolocation) {
 
         // GeoLocation을 이용해서 접속 위치를 얻어옵니다
@@ -68,13 +66,7 @@
 
             map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
 
-            //map.setCenter(locPosition);
 
-            //---->지도 레벨 변경
-            //map.setLevel(3);
-
-            //지도 레벨을 표시합니다
-            //displayLevel();
           });
 
     } else { // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
@@ -85,38 +77,53 @@
         map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
         }
 
-    // 보관기관 마커 생성
+
+
+        // 보관기관 마커 생성
         // 주소 목록을 순회하며 각 주소에 대한 좌표를 찾고 마커로 표시
 
         //$.ajax로 getallCenter 연결!!!
+        $.ajax({
+            url: '/getAllCenter',
+            type: 'POST',
+            async:false,
+            success:   function(data) {
+                locations = data;
+                console.log(locations);
+            }
 
-    for (var i = 0; i < locations.length; i++) {
-        (function(location) {
-            geocoder.addressSearch(location.address, function(result, status) {
-                if (status === kakao.maps.services.Status.OK) {
-                    var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-                    var marker = new kakao.maps.Marker({
-                        map: map,
-                        position: coords
-                    });
+        });
 
-                    var infowindow = new kakao.maps.InfoWindow({
-                        content: '<div style="width:150px;text-align:center;padding:6px 0;"><img style=" margin: 0; width:100%; height:50px;" src="./image/'+location.main_img
-                        +'"><br>'+
-                        '<a href="#" onClick="mapClick(\''+location.code+'\',\'${loginUser.id}\')">'+location.title
-                        +'</div>'
-                    });
+
+// 보관기관 마커 생성
+// 주소 목록을 순회하며 각 주소에 대한 좌표를 찾고 마커로 표시
+for (var i = 0; i < locations.length; i++) {
+    (function(location) {
+        geocoder.addressSearch(location.centerAddr, function(result, status) {
+            if (status === kakao.maps.services.Status.OK) {
+                var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+                var marker = new kakao.maps.Marker({
+                    map: map,
+                    position: coords
+                });
+
+                var infowindow = new kakao.maps.InfoWindow({
+                    content: '<div style="width:150px;text-align:center;padding:6px 0;">' + location.regId + '</div>'
+                });
+
+                kakao.maps.event.addListener(marker, 'mouseover', function() {
                     infowindow.open(map, marker);
-                }
-            });
-        })(locations[i]);
-    }
+                });
+                kakao.maps.event.addListener(marker, 'mouseout', function() {
+                    infowindow.close();
+                });
+            }
+        });
+    })(locations[i]);
+}
 
-    //현재 위치 표시
-    document.addEventListener("DOMContentLoaded", ()=> {
-        console.log("원하는 코드 적기");
-        console.log("");
-    });
+
 </script>
 </body>
 </html>
