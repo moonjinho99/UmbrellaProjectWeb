@@ -25,6 +25,7 @@ public class UmbrellaController {
     @PostMapping(value = "/get_umbrella", produces = "application/json;charset=utf-8")
     @ResponseBody
     public List<UmbrellaDto> getUmbrellaList(@RequestBody String lockercode){
+        lockercode = lockercode.replaceAll("\"","");
         System.out.println("우산 : "+umbrellaService.getUmbrellaList(lockercode));
         return umbrellaService.getUmbrellaList(lockercode);
     }

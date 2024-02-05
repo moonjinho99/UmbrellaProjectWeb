@@ -5,7 +5,7 @@
 <mapper namespace="com.example.umbrella.mapper.UmbrellaMapper">
 
     <select id="getUmbrellaList" resultType="com.example.umbrella.dto.UmbrellaDto">
-        select umbrellacode,price,rentalId,photo,rentalStatus,rentalTime,returnTime from umbrella u join lockerdetail l on u.umbrellacode = l.umbrellacode where l.lockercode = #{lockercode}
+        select u.umbrellacode,price,rentalId,photo,rentalStatus,rentalTime,returnTime from umbrella u join lockerdetail l on u.umbrellacode = l.umbrellacode where l.lockercode = #{lockercode}
     </select>
 
 </mapper>

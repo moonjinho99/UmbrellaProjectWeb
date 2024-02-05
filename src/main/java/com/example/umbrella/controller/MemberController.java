@@ -20,7 +20,6 @@ public class MemberController {
     @Autowired
     MemberService memberService;
 
-
     // 로그인
     @PostMapping(value = "/login-user", produces = "application/json;charset=utf-8")
     @ResponseBody
@@ -32,7 +31,6 @@ public class MemberController {
         {
             return "success";
         }
-
         else{
             return "fail";
         }
