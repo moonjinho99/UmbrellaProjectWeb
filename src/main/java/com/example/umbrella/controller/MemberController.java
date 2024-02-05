@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@Controller
 @RequiredArgsConstructor
 @Slf4j
 public class MemberController {
@@ -20,12 +20,6 @@ public class MemberController {
     @Autowired
     MemberService memberService;
 
-    @GetMapping("/login.do")
-    public String loginGET(){
-        List<MemberDto> memberDtoList = memberService.getAllMemberList();
-        System.out.print("멤버 리스트 : "+memberDtoList);
-        return "member/login";
-    }
 
     // 로그인
     @PostMapping(value = "/login-user", produces = "application/json;charset=utf-8")
@@ -76,6 +70,11 @@ public class MemberController {
             return "fail";
         }
 
+    }
+
+    @GetMapping(value = "/UmbrellaAdminMainPage")
+    public String mainmenu(){
+        return "main";
     }
 
 }
