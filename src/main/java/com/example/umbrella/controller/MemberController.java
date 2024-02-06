@@ -70,9 +70,6 @@ public class MemberController {
 
     }
 
-    @GetMapping(value = "/UmbrellaAdminMainPage")
-    public String mainmenu(){
-        return "main";
-    }
+
 
 }

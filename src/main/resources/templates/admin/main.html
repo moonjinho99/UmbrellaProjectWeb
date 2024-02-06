@@ -11,39 +11,25 @@
 <body>
 <div id="wrap">
     <!--헤더영역-->
-<div class="header">
-    <div class="logo">
-        <img src="/images/umbrella_logo.png" alt="로고">
+    <div class="header">
+        <div class="logo">
+            <a href="/admin-main"><img src="/images/umbrella_logo.png" alt="로고"></a>
+        </div>
+        <div class="">{loginUser}}님 환영합니다.</div>
     </div>
-    <div class="">관리자님 환영합니다.</div>
-</div>
-<nav id="menu">
-    <ul class="menu_ul">
-        <li>
-            <a class="aLink">등 록</a>
-            <ul class="submenu">
-                <li class="subLi">
-                    <a class="aLink2">우산 등록</a>
-                    <a class="aLink2">기관 등록</a>
-                    <a class="aLink2">보관함 등록</a>
-                    </li>
-            </ul>
-        </li>
-    </ul>
-    <ul class="menu_ul">
-        <li>
-            <a class="aLink">관 리</a>
-            <ul class="submenu">
-                <li class="subLi">
-                    <a class="aLink2">우산 관리</a>
-                    <a class="aLink2">기관 관리</a>
-                    <a class="aLink2">보관함 관리</a>
-                </li>
-            </ul>
-        </li>
-    </ul>
-</nav>
-<div id="map" style="width: 83%; height: 90vh;"></div>
+    <nav id="menu">
+        <ul class="menu_ul">
+            <li>
+                <a href="#" class="aLink">기관 등록</a>
+            </li>
+        </ul>
+        <ul class="menu_ul">
+            <li>
+                <a href="#" class="aLink">기관 관리</a>
+            </li>
+        </ul>
+    </nav>
+    <div id="map" style="width: 83%; height: 90vh;"></div>
 </div>
 
 <script>

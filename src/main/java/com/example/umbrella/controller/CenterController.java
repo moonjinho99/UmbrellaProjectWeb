@@ -21,9 +21,9 @@ public class CenterController {
     @Autowired
     CenterService centerService;
 
-    @GetMapping(value = "/umbrella-main")
+    @GetMapping(value = "/center-main")
     public String mainmenu(){
-        return "main";
+        return "center/main";
     }
 
     @ResponseBody
