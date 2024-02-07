@@ -70,6 +70,11 @@ public class MemberController {
 
     }
 
+    @GetMapping(value = "/umbrella-login")
+    public String loginView(){
+        return "member/login";
+    }
+
 
 
 }

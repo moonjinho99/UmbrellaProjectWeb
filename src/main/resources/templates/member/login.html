@@ -3,8 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <title>Animated Login Form</title>
+
+    <link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/a81368914c.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <script type="text/javascript" src="/script/login.js"></script>
+    <link rel="stylesheet" href="/css/login.css">
 </head>
 <body>
-Hellow
+<img class="wave" src="https://raw.githubusercontent.com/sefyudem/Responsive-Login-Form/master/img/wave.png">
+<div class="container">
+    <div class="img">
+        <img src="https://raw.githubusercontent.com/sefyudem/Responsive-Login-Form/master/img/bg.svg">
+    </div>
+    <div class="login-content">
+        <form id="login_form" method="post">
+            <h2 class="title" style="margin-bottom: 60px;">우산의 집</h2>
+            <div class="input-div one">
+                <div class="i">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="div">
+                    <input type="text" class="input" placeholder="아이디">
+                </div>
+            </div>
+            <div class="input-div pass">
+                <div class="i">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <div class="div">
+                    <input type="password" class="input" placeholder="비밀번호">
+                </div>
+            </div>
+            <input type="button" class="btn" id="login_button" value="로그인" style="margin-top: 40px;">
+        </form>
+    </div>
+</div>
+
+<script>
+    // 유효성 검사 결과에 따른 메시지 출력
+    var msg = "${msg}";
+
+    if (msg != "") {
+        alert(msg);
+    }
+
+    // 로그인 버튼 클릭시
+    $("#login_button").click(function() {
+        $("#login_form").attr("action", "/member/login.do");
+        $("#login_form").submit();
+    }
+</script>
 </body>
 </html>
