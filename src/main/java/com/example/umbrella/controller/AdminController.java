@@ -21,8 +21,8 @@ public class AdminController {
     }
 
     @GetMapping(value = "/admin-main-menu")
-    public String mainmenuAction(@RequestParam String buttonValue, Model model){
-        log.info(buttonValue);
+    public String mainmenuActionAdmin(@RequestParam String buttonValue, Model model){
+        System.out.println(buttonValue);
         String result = "";
         if(buttonValue.equals("기관 등록")){
             result="/admin/admin_center_enroll";

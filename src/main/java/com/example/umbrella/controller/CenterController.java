@@ -45,8 +45,8 @@ public class CenterController {
     }
 
     @GetMapping(value = "/center-main-menu")
-    public String mainmenuAction(@RequestParam String buttonValue, Model model){
-        log.info(buttonValue);
+    public String mainmenuActionCenter(@RequestParam String buttonValue, Model model){
+        System.out.println(buttonValue);
         String result = "";
         if(buttonValue.equals("우산 등록")){
             result="/center/center_umbrella_enroll";

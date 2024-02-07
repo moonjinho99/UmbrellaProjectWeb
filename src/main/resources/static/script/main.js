@@ -4,6 +4,7 @@ function menu_click(ths,id){
      console.log(buttonValue, id);
 
      if(id==='admin'){
+     console.log("관리자");
          $.ajax({
                     type: 'GET',
                     url: '/admin-main-menu',
@@ -15,7 +16,9 @@ function menu_click(ths,id){
                         console.error("에러 발생:", error);
                     }
                 });
-     }else if(id!=='admin'){
+     }else{
+     console.log("ddd");
+     console.log(buttonValue);
         $.ajax({
                     type: 'GET',
                     url: '/center-main-menu',
