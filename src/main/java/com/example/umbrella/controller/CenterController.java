@@ -6,8 +6,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
@@ -40,6 +42,23 @@ public class CenterController {
         log.debug("centerAddrList : "+centerAddrList.toString());
 
         return centerList;
+    }
+
+    @GetMapping(value = "/center-main-menu")
+    public String mainmenuAction(@RequestParam String buttonValue, Model model){
+        log.info(buttonValue);
+        String result = "";
+        if(buttonValue.equals("우산 등록")){
+            result="/center/center_umbrella_enroll";
+        }else if(buttonValue.equals("우산 관리")){
+            result="/center/center_umbrella_manage";
+        }else if(buttonValue.equals("보관함 등록")){
+            result="/center/center_storage_manage";
+        }else if(buttonValue.equals("보관함 관리")){
+            result="/center/center_storage_manage";
+        }
+        model.addAttribute("page",result);
+        return result;
     }
 
 }
