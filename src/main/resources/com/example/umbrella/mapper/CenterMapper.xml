@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.umbrella.mapper.CenterMapper">
 <select id="getAllCenter">
-    select * from center
+    SELECT * FROM member A RIGHT JOIN center B ON A.id = B.regId
 </select>
 
 </mapper>
