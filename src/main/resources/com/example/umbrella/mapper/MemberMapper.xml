@@ -4,8 +4,39 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.umbrella.mapper.MemberMapper">
 
-<select id="getAllMemberList" resultType="com.example.umbrella.dto.MemberDto">
-    select * from member
-</select>
+    <select id="getAllMemberList" resultType="com.example.umbrella.dto.MemberDto">
+        select * from member
+    </select>
 
+    <!--관리자 등록 여부 확인-->
+    <select id="firstAdmin" resultType="int">
+        select count(*) from member where level = 2
+    </select>
+
+    <!--정보 조회-->
+    <select id="memberLogin" resultType="com.example.umbrella.dto.MemberDto">
+        select * from member where id = #{id}
+    </select>
+
+    <!-- 정보 생성 -->
+    <insert id="createMember" parameterType="com.example.umbrella.dto.MemberDto" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into member (id, pw, name, phone, level) values (
+        #{id}, #{pw}, #{name}, #{phone}, #{level})
+    </insert>
+
+
+
+
+    <!--아이디 중복검사-->
+    <select id="idCheck" resultType="int">
+        select count(*) from member where id = #{id}
+    </select>
+
+    <!-- 회원가입(앱) -->
+    <insert id="joinUser" parameterType="com.example.umbrella.dto.MemberDto" useGeneratedKeys="true"
+            keyProperty="id">
+        insert into member (id, pw, name, phone) values (
+        #{id}, #{pw}, #{name}, #{phone})
+    </insert>
 </mapper>

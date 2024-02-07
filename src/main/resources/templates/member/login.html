@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
-    <title>Animated Login Form</title>
+    <title>우산의 집 로그인</title>
 
     <link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
     <script src="https://kit.fontawesome.com/a81368914c.js"></script>
@@ -11,6 +10,7 @@
 
     <script type="text/javascript" src="/script/login.js"></script>
     <link rel="stylesheet" href="/css/login.css">
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 </head>
 <body>
 <img class="wave" src="https://raw.githubusercontent.com/sefyudem/Responsive-Login-Form/master/img/wave.png">
@@ -26,7 +26,7 @@
                     <i class="fas fa-user"></i>
                 </div>
                 <div class="div">
-                    <input type="text" class="input" placeholder="아이디">
+                    <input type="text" class="input" name="id" placeholder="아이디">
                 </div>
             </div>
             <div class="input-div pass">
@@ -34,7 +34,7 @@
                     <i class="fas fa-lock"></i>
                 </div>
                 <div class="div">
-                    <input type="password" class="input" placeholder="비밀번호">
+                    <input type="password" class="input" name="pw" placeholder="비밀번호">
                 </div>
             </div>
             <input type="button" class="btn" id="login_button" value="로그인" style="margin-top: 40px;">
@@ -43,18 +43,21 @@
 </div>
 
 <script>
-    // 유효성 검사 결과에 따른 메시지 출력
-    var msg = "${msg}";
+		var result = "${result}";
 
-    if (msg != "") {
-        alert(msg);
-    }
+		if (result == 0) {
+			alert("비밀번호가 일치하지 않습니다.");
+		} else if (result == 1) {
+		    alert("아이디 또는 비밀번호가 일치하지 않습니다.");
+		}
 
-    // 로그인 버튼 클릭시
-    $("#login_button").click(function() {
-        $("#login_form").attr("action", "/member/login.do");
-        $("#login_form").submit();
-    }
+		/* 로그인 버튼 클릭 메서드 */
+		$("#login_button").click(function() {
+			alert("로그인 버튼 작동");
+			/* 로그인 메서드 서버 요청 */
+			$("#login_form").attr("action", "/login.do");
+			$("#login_form").submit();
+		});
 </script>
 </body>
 </html>
