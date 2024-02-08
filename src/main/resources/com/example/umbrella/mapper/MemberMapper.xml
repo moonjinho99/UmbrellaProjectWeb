@@ -25,9 +25,6 @@
         #{id}, #{pw}, #{name}, #{phone}, #{level})
     </insert>
 
-
-
-
     <!--아이디 중복검사-->
     <select id="idCheck" resultType="int">
         select count(*) from member where id = #{id}

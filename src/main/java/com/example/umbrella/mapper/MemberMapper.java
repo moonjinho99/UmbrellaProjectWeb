@@ -13,10 +13,15 @@ public interface MemberMapper {
     // 관리자 등록 여부 확인
     int firstAdmin(int level);
 
-    // 정보 조회
+    // 로그인
     MemberDto memberLogin(MemberDto member);
 
     // 정보 생성
     void createMember(MemberDto member);
 
+    // 아이디 중복확인
+    int idCheck(String id);
+
+    // 회원가입(앱)
+    void joinUser(MemberDto member);
 }

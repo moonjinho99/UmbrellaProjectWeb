@@ -32,9 +32,21 @@ public class MemberServiceImpl implements MemberService {
         memberMapper.createMember(member);
     }
 
-    // 정보 조회
+    // 로그인
     @Override
     public MemberDto memberLogin(MemberDto member) {
         return memberMapper.memberLogin(member);
+    }
+
+    // 아이디 중복 확인
+    @Override
+    public int idCheck(String id) {
+        return memberMapper.idCheck(id);
+    }
+
+    // 회원가입(앱)
+    @Override
+    public void joinUser(MemberDto member) {
+        memberMapper.joinUser(member);
     }
 }

@@ -29,46 +29,84 @@ public class MemberController {
         return new BCryptPasswordEncoder();
     }
 
-    // 로그인
+    // 로그인(앱)
     @PostMapping(value = "/login-user", produces = "application/json;charset=utf-8")
     @ResponseBody
     public String loginUser(@RequestBody MemberDto memberDto) {
 
-        System.out.println("넘어온 값 : " + memberDto);
+        System.out.println("<<<로그인(앱) 사용자가 입력한 정보>>>");
+        System.out.println("아이디 : " + memberDto.getId());
+        System.out.println("비밀번호 : " + memberDto.getPw());
 
-        if (memberDto.getId().equals("qwer") && memberDto.getPw().equals("1234")) {
-            return "success";
+        MemberDto mvo = memberService.memberLogin(memberDto);  // 입력한 아이디와 일치하는 DB상의 아이디가 있는지 확인
+
+        String rawPw = "";
+        String encodePw = "";
+
+        if (mvo != null) {  // 아이디 일치
+            rawPw = memberDto.getPw(); // 입력한 비밀번호
+            encodePw = mvo.getPw(); // DB에 저장된 비밀번호(암호화)
+            System.out.println("rawPw : " + rawPw);
+            System.out.println("encodePw : " + encodePw);
+
+            if (passwordEncoding().matches(rawPw, encodePw)) { // 비밀번호 일치
+                mvo.setPw("");
+                return "success";
+            } else {
+                return "fail";
+            }
         } else {
             return "fail";
         }
     }
 
-    // 아이디 중복확인
+    // 아이디 중복확인(앱)
     @PostMapping(value = "/id-check", produces = "application/json;charset=utf-8")
     @ResponseBody
     public String idCheck(@RequestBody MemberDto memberDto) {
 
-        System.out.println("중복아이디 : " + memberDto);
+        System.out.println("<<<아이디 중복확인(앱) 사용자가 입력한 정보>>>");
+        System.out.println("아이디 : " + memberDto.getId());
 
-        if (!(memberDto.getId().equals("qwer"))) {
+        int result = memberService.idCheck(memberDto.getId());
+        System.out.println("result : " + result);
+
+        if (result == 0) {
             return "success";
         } else {
             return "fail";
         }
-
     }
 
-    // 회원가입
+    // 회원가입(앱)
     @PostMapping(value = "/join-user", produces = "application/json;charset=utf-8")
     @ResponseBody
     public String joinUser(@RequestBody MemberDto memberDto) {
 
-        if (memberDto.getId().equals("qqqq") && memberDto.getName().equals("방현식") && memberDto.getPw().equals("1234") && memberDto.getPhone().equals("01076565796")) {
+        System.out.println("<<<회원가입(앱) 사용자가 입력한 정보>>>");
+        System.out.println("아이디 : " + memberDto.getId());
+        System.out.println("비밀번호 : " + memberDto.getPw());
+        System.out.println("이름 : " + memberDto.getName());
+        System.out.println("휴대폰번호 : " + memberDto.getPhone());
+
+        String rawPw = ""; // 인코딩 전 비밀번호
+        String encodePw = ""; // 인코딩 후 비밀번호
+
+        rawPw = memberDto.getPw(); // 입력한 비밀번호
+        encodePw = passwordEncoding().encode(rawPw); // 비밀번호 인코딩
+        System.out.println("rawPw : " + rawPw);
+        System.out.println("encodePw : " + encodePw);
+
+        memberDto.setPw(encodePw);
+
+        memberService.joinUser(memberDto);
+
+        if (!memberDto.getId().isEmpty() && !memberDto.getName().isEmpty() &&
+                !memberDto.getPw().isEmpty() && !memberDto.getPhone().isEmpty()) {
             return "success";
         } else {
             return "fail";
         }
-
     }
 
     // 로그인 페이지
@@ -132,7 +170,7 @@ public class MemberController {
 //            rttr.addFlashAttribute("msg", "아이디 또는 비밀번호가 일치하지 않습니다.");
             page = "redirect:/umbrella-login";
         }
-         return page;
+        return page;
     }
 
 
