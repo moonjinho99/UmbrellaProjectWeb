@@ -87,7 +87,7 @@
                                         }
 
                                         /* 최종 유효성 검사 */
-                                        if (idCheck && pwCheck && nameCheck && phoneCheck) {
+                                        if (idCheck && idckCheck && pwCheck && nameCheck && phoneCheck) {
                                             /* 권한 유효성 검사 */
                                             if (!level) {
                                                 alert("권한을 선택해주세요.");
@@ -104,4 +104,43 @@
                                         return false;
                                     });
                             });
+
+
+        /* 아이디 중복검사 */
+        $("#idCheck_button").click(
+                function() {
+                    var id = $('#id_input').val();
+
+                    if (id == "") {
+                        alert("아이디를 입력해주세요.");
+                        return false;
+                    }
+
+                    var data = {
+                        id : id
+                    }
+
+                    $.ajax({
+                        type : "post",
+                        url : "/idCheck.do",
+                        data : data,
+                        success : function(result) {
+                            console.log(data);
+                            console.log("성공 여부 : " + result);
+                            if (result != "fail") {
+                                // 아이디 중복X
+                                alert("사용 가능한 아이디입니다.");
+                                idckCheck = true;
+                            }
+
+                            else {
+                                // 아이디 중복
+                                alert("이미 사용 중인 아이디입니다.");
+                                idckCheck = false;
+                            }
+
+                        }// success 종료
+                    }); // ajax 종료
+
+                });// function 종료
   </script>

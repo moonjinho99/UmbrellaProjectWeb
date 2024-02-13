@@ -192,7 +192,7 @@ public class MemberController {
     // 아이디 중복확인
     @PostMapping(value = "idCheck.do")
     @ResponseBody
-    public String idCheckWeb(@RequestBody String id) {
+    public String idCheckWeb(@RequestParam("id") String id) {
         System.out.println("<<< 아이디 중복확인 - 사용자가 입력한 정보 >>>");
         System.out.println("아이디 : " + id);
 
