@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>우산의 집 로그인</title>
@@ -8,7 +8,6 @@
     <script src="https://kit.fontawesome.com/a81368914c.js"></script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <script type="text/javascript" src="/script/login.js"></script>
     <link rel="stylesheet" href="/css/login.css">
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
 </head>
@@ -26,7 +25,7 @@
                     <i class="fas fa-user"></i>
                 </div>
                 <div class="div">
-                    <input type="text" class="input" name="id" placeholder="아이디">
+                    <input type="text" class="input" name="id" placeholder="아이디" id="id_input">
                 </div>
             </div>
             <div class="input-div pass">
@@ -34,7 +33,7 @@
                     <i class="fas fa-lock"></i>
                 </div>
                 <div class="div">
-                    <input type="password" class="input" name="pw" placeholder="비밀번호">
+                    <input type="password" class="input" name="pw" placeholder="비밀번호" id="pw_input">
                 </div>
             </div>
             <input type="button" class="btn" id="login_button" value="로그인" style="margin-top: 40px;">
@@ -42,8 +41,9 @@
     </div>
 </div>
 
-<script>
-		var result = "${result}";
+<script th:inline="javascript">
+
+        var result = [[${result}]];
 
 		if (result == 0) {
 			alert("비밀번호가 일치하지 않습니다.");
@@ -51,13 +51,45 @@
 		    alert("아이디 또는 비밀번호가 일치하지 않습니다.");
 		}
 
-		/* 로그인 버튼 클릭 메서드 */
-		$("#login_button").click(function() {
-			alert("로그인 버튼 작동");
-			/* 로그인 메서드 서버 요청 */
-			$("#login_form").attr("action", "/login.do");
-			$("#login_form").submit();
-		});
+
+		/* 유효성 검사 통과유무 변수 */
+        var idCheck = false; // 아이디
+        var pwCheck = false; // 비밀번호
+
+        $(document).ready(
+                function() {
+                    $("#login_button")
+                            .click(
+                                    function() {
+                                        /* 입력값 변수 */
+                                        var id = $('#id_input').val(); // 아이디 입력란
+                                        var pw = $('#pw_input').val(); // 비밀번호 입력란
+
+                                        /* 아이디 유효성검사 */
+                                        if (id == "") {
+                                            idCheck = false;
+                                        } else {
+                                            idCheck = true;
+                                        }
+
+                                        /* 비밀번호 유효성 검사 */
+                                        if (pw == "") {
+                                            pwCheck = false;
+                                        } else {
+                                            pwCheck = true;
+                                        }
+
+                                        /* 최종 유효성 검사 */
+                                        if (idCheck && pwCheck) {
+                                            $("#login_form").attr("action", "/login.do");
+                                            $("#login_form").submit();
+                                        } else {
+                                            alert("아이디와 비밀번호를 모두 입력해 주세요.");
+                                        }
+
+                                        return false;
+                                    });
+                });
 </script>
 </body>
 </html>

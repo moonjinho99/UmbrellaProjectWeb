@@ -1,6 +1,7 @@
 package com.example.umbrella.config;
 
 import com.example.umbrella.interceptor.LoggerInterceptor;
+import com.example.umbrella.interceptor.LoginCheckInterceptor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -16,6 +17,10 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/css/**","/images/**","/js/**");
 
         log.debug("LoggerInterceptor is registered.");
+
+        registry.addInterceptor(new LoginCheckInterceptor())
+                .addPathPatterns("/**")
+                .excludePathPatterns("/umbrella-login", "/login.do", "/css/**", "/images/**", "/js/**");
     }
 
 

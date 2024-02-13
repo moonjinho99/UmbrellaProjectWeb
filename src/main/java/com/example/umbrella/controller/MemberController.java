@@ -34,7 +34,7 @@ public class MemberController {
     @ResponseBody
     public String loginUser(@RequestBody MemberDto memberDto) {
 
-        System.out.println("<<<로그인(앱) 사용자가 입력한 정보>>>");
+        System.out.println("<<< 로그인(앱) - 사용자가 입력한 정보 >>>");
         System.out.println("아이디 : " + memberDto.getId());
         System.out.println("비밀번호 : " + memberDto.getPw());
 
@@ -65,7 +65,7 @@ public class MemberController {
     @ResponseBody
     public String idCheck(@RequestBody MemberDto memberDto) {
 
-        System.out.println("<<<아이디 중복확인(앱) 사용자가 입력한 정보>>>");
+        System.out.println("<<< 아이디 중복확인(앱) - 사용자가 입력한 정보 >>>");
         System.out.println("아이디 : " + memberDto.getId());
 
         int result = memberService.idCheck(memberDto.getId());
@@ -83,7 +83,7 @@ public class MemberController {
     @ResponseBody
     public String joinUser(@RequestBody MemberDto memberDto) {
 
-        System.out.println("<<<회원가입(앱) 사용자가 입력한 정보>>>");
+        System.out.println("<<< 회원가입(앱) - 사용자가 입력한 정보 >>>");
         System.out.println("아이디 : " + memberDto.getId());
         System.out.println("비밀번호 : " + memberDto.getPw());
         System.out.println("이름 : " + memberDto.getName());
@@ -128,12 +128,12 @@ public class MemberController {
             memberService.createMember(member);
         }
 
-        return "member/login";
+        return "/member/login";
     }
 
     // 로그인
     @PostMapping(value = "login.do")
-    public String Login(HttpServletRequest request, MemberDto member, RedirectAttributes rttr) {
+    public String login(HttpServletRequest request, MemberDto member, RedirectAttributes rttr) {
         HttpSession session = request.getSession();
         String page = "";
         String rawPw = "";
@@ -149,25 +149,31 @@ public class MemberController {
 
             if (passwordEncoding().matches(rawPw, encodePw)) { // 비밀번호 일치
                 mvo.setPw("");
+                session.setAttribute("loginInfo", mvo);
+//                session.setMaxInactiveInterval(10);
+
+                rttr.addFlashAttribute("loginUser", mvo.getName());
+                rttr.addFlashAttribute("level", mvo.getLevel());
+
                 if (mvo.getLevel() == 1) {   // 기관인 경우
-                    session.setAttribute("organ", mvo);
                     System.out.println("level : " + mvo.getLevel());
+
                     page = "redirect:/center-main";
                 } else if (mvo.getLevel() == 2) {    // 관리자인 경우
-                    session.setAttribute("admin", mvo);
                     System.out.println("level : " + mvo.getLevel());
+
                     page = "redirect:/admin-main";
                 }
             } else {
                 rttr.addFlashAttribute("result", 0);
                 System.out.println("result : " + rttr.addFlashAttribute("result", 0));
-//                rttr.addFlashAttribute("msg", "비밀번호가 일치하지 않습니다.");
+
                 return "redirect:/umbrella-login";
             }
         } else {
             rttr.addFlashAttribute("result", 1);
             System.out.println("result : " + rttr.addFlashAttribute("result", 1));
-//            rttr.addFlashAttribute("msg", "아이디 또는 비밀번호가 일치하지 않습니다.");
+
             page = "redirect:/umbrella-login";
         }
         return page;
@@ -177,10 +183,59 @@ public class MemberController {
     // 로그아웃
     @GetMapping(value = "logout.do")
     public String Logout(HttpServletRequest request) {
-        log.info("로그아웃");
-
         HttpSession session = request.getSession();
         session.invalidate();
+
         return "redirect:/umbrella-login";
     }
+
+    // 아이디 중복확인
+    @PostMapping(value = "idCheck.do")
+    @ResponseBody
+    public String idCheckWeb(@RequestBody String id) {
+        System.out.println("<<< 아이디 중복확인 - 사용자가 입력한 정보 >>>");
+        System.out.println("아이디 : " + id);
+
+        int result = memberService.idCheck(id);
+        System.out.println("result : " + result);
+
+        if (result != 0) {
+            return "fail";  // 아이디 중복
+        } else {
+            return "success"; // 아이디 중복 X
+        }
+    }
+
+    // 정보생성 및 기관등록
+    @PostMapping(value = "enrollMember.do")
+    public String enrollMember(MemberDto member) {
+        System.out.println("<<< 정보생성 및 기관등록 - 사용자가 입력한 정보 >>>");
+        System.out.println("아이디 : " + member.getId());
+        System.out.println("비밀번호 : " + member.getPw());
+        System.out.println("이름 : " + member.getName());
+        System.out.println("휴대폰번호 : " + member.getPhone());
+        System.out.println("권한 : " + member.getLevel());
+
+        String rawPw = ""; // 인코딩 전 비밀번호
+        String encodePw = ""; // 인코딩 후 비밀번호
+
+        rawPw = member.getPw(); // 입력한 비밀번호
+        encodePw = passwordEncoding().encode(rawPw); // 비밀번호 인코딩
+        System.out.println("rawPw : " + rawPw);
+        System.out.println("encodePw : " + encodePw);
+
+        member.setPw(encodePw);
+
+        memberService.createMember(member);
+
+        return "redirect:/admin-main";
+    }
+
+    // 기관 등록 페이지(테스트용)
+    @GetMapping(value = "/enrollMember")
+    public String enroll() {
+
+        return "/enrollMember";
+    }
+
 }
