@@ -122,7 +122,7 @@ public class MemberController {
             member.setId("admin");
             member.setPw(passwordEncoding().encode(("1234")));
             member.setName("관리자");
-            member.setPhone("01010041004");
+            member.setPhone("010-1004-1004");
             member.setLevel(2);
 
             memberService.createMember(member);
@@ -154,16 +154,19 @@ public class MemberController {
 
                 rttr.addFlashAttribute("loginUser", mvo.getName());
                 rttr.addFlashAttribute("level", mvo.getLevel());
+                System.out.println("level : " + mvo.getLevel());
 
-                if (mvo.getLevel() == 1) {   // 기관인 경우
-                    System.out.println("level : " + mvo.getLevel());
+                page = "redirect:/admin-main";
 
-                    page = "redirect:/center-main";
-                } else if (mvo.getLevel() == 2) {    // 관리자인 경우
-                    System.out.println("level : " + mvo.getLevel());
-
-                    page = "redirect:/admin-main";
-                }
+//                if (mvo.getLevel() == 1) {   // 기관인 경우
+//                    System.out.println("level : " + mvo.getLevel());
+//
+//                    page = "redirect:/center-main";
+//                } else if (mvo.getLevel() == 2) {    // 관리자인 경우
+//                    System.out.println("level : " + mvo.getLevel());
+//
+//                    page = "redirect:/admin-main";
+//                }
             } else {
                 rttr.addFlashAttribute("result", 0);
                 System.out.println("result : " + rttr.addFlashAttribute("result", 0));
@@ -232,10 +235,10 @@ public class MemberController {
     }
 
     // 기관 등록 페이지(테스트용)
-    @GetMapping(value = "/enrollMember")
-    public String enroll() {
-
-        return "/enrollMember";
-    }
+//    @GetMapping(value = "/enrollMember")
+//    public String enroll() {
+//
+//        return "/enrollMember";
+//    }
 
 }

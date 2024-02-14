@@ -34,6 +34,15 @@ function menu_click(ths,id){
 
 }
 
+        // 임시로 잠깐 여기 넣어놨어용
+        /* 전화번호 자동 하이픈 */
+        const autoHyphen = (target) => {
+        console.log("뭐해");
+          target.value = target.value
+            .replace(/[^0-9]/g, '')
+            .replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`);
+        }
+
 //admin js 시작
 //function reset(id){
 //

@@ -23,10 +23,10 @@ public class CenterController {
     @Autowired
     CenterService centerService;
 
-    @GetMapping(value = "/center-main")
-    public String mainmenu(){
-        return "center/main";
-    }
+//    @GetMapping(value = "/center-main")
+//    public String mainmenu(){
+//        return "center/main";
+//    }
 
     @ResponseBody
     @PostMapping(value = "/getAllCenter")
@@ -45,7 +45,7 @@ public class CenterController {
     }
 
     @GetMapping(value = "/center-main-menu")
-    public String mainmenuActionCenter(@RequestParam String buttonValue, Model model){
+    public String mainmenuActionCenter(@RequestParam("buttonValue") String buttonValue, Model model){
         System.out.println(buttonValue);
         String result = "";
         if(buttonValue.equals("우산 등록")){

@@ -1,146 +1,154 @@
-<script src="http://code.jquery.com/jquery-latest.min.js"></script>
+<!--<script src="http://code.jquery.com/jquery-latest.min.js"></script>-->
 
-<form id="enroll_form" method="post">
-  <div>
-    <label>아이디</label>
-    <input type="text" name="id" placeholder="아이디" id="id_input">
-    <input type="button" id="idCheck_button" value="중복확인">
-  </div>
+<!--<form id="enroll_form" method="post">-->
+<!--  <div>-->
+<!--    <label>아이디</label>-->
+<!--    <input type="text" name="id" placeholder="아이디" id="id_input">-->
+<!--    <input type="button" id="idCheck_button" value="중복확인">-->
+<!--  </div>-->
 
-  <div>
-    <label>비밀번호</label>
-    <input type="password" name="pw" placeholder="비밀번호" id="pw_input">
-  </div>
+<!--  <div>-->
+<!--    <label>비밀번호</label>-->
+<!--    <input type="password" name="pw" placeholder="비밀번호" id="pw_input">-->
+<!--  </div>-->
 
-  <div>
-    <label>사용자명</label>
-    <input type="text" name="name" placeholder="사용자명" id="name_input">
-  </div>
+<!--  <div>-->
+<!--    <label>사용자명</label>-->
+<!--    <input type="text" name="name" placeholder="사용자명" id="name_input">-->
+<!--  </div>-->
 
-  <div>
-    <label>전화번호</label>
-    <input type="text" name="phone" placeholder="전화번호('-'포함X)" maxlength="13" id="phone_input">
-  </div>
+<!--  <div>-->
+<!--    <label>전화번호</label>-->
+<!--    <input type="text" name="phone" placeholder="전화번호" maxlength="13" id="phone_input" oninput="autoHyphen(this)">-->
+<!--  </div>-->
 
-  <div>
-    <label>권한</label>
-    <select name="level" id="level">
-      <option value="" selected disabled>선택</option>
-      <option value="1">기관</option>
-      <option value="2">관리자</option>
-    </select>
-  </div>
+<!--  <div>-->
+<!--    <label>권한</label>-->
+<!--    <select name="level" id="level">-->
+<!--      <option value="" selected disabled>선택</option>-->
+<!--      <option value="1">기관</option>-->
+<!--      <option value="2">관리자</option>-->
+<!--    </select>-->
+<!--  </div>-->
 
-  <div>
-    <input type="button" id="enroll_button" value="등록">
-    <input type="button" onclick="reset(,'admin')" value="취소">
-  </div>
-</form>
+<!--  <div>-->
+<!--    <input type="button" id="enroll_button" value="등록">-->
+<!--    <input type="button" onclick="reset(,'admin')" value="취소">-->
+<!--  </div>-->
+<!--</form>-->
 
-<script>
-        /* 유효성 검사 통과유무 변수 */
-        var idCheck = false; // 아이디
-        var idckCheck = false; // 아이디 중복 검사
-        var pwCheck = false; // 비밀번호
-        var nameCheck = false; // 이름 및 기관명
-        var phoneCheck = false; // 전화번호
-        var levelCheck = false; // 권한
+<!--<script>-->
+<!--        /* 유효성 검사 통과유무 변수 */-->
+<!--        var idCheck = false; // 아이디-->
+<!--        var idckCheck = false; // 아이디 중복 검사-->
+<!--        var pwCheck = false; // 비밀번호-->
+<!--        var nameCheck = false; // 이름 및 기관명-->
+<!--        var phoneCheck = false; // 전화번호-->
+<!--        var levelCheck = false; // 권한-->
 
-        $(document).ready(
-                function() {
-                    $("#enroll_button")
-                            .click(
-                                    function() {
-                                        /* 입력값 변수 */
-                                        var id = $('#id_input').val(); // 아이디 입력란
-                                        var pw = $('#pw_input').val(); // 비밀번호 입력란
-                                        var name = $('#name_input').val(); // 이름 입력란
-                                        var phone = $('#phone_input').val(); // 전화번호 입력란
-                                        var level = $('#level').val(); // 권한
+<!--        $(document).ready(-->
+<!--                function() {-->
+<!--                    $("#enroll_button")-->
+<!--                            .click(-->
+<!--                                    function() {-->
+<!--                                        /* 입력값 변수 */-->
+<!--                                        var id = $('#id_input').val(); // 아이디 입력란-->
+<!--                                        var pw = $('#pw_input').val(); // 비밀번호 입력란-->
+<!--                                        var name = $('#name_input').val(); // 이름 입력란-->
+<!--                                        var phone = $('#phone_input').val(); // 전화번호 입력란-->
+<!--                                        var level = $('#level').val(); // 권한-->
 
-                                        /* 아이디 유효성검사 */
-                                        if (id == "") {
-                                            idCheck = false;
-                                        } else {
-                                            idCheck = true;
-                                        }
+<!--                                        /* 아이디 유효성검사 */-->
+<!--                                        if (id == "") {-->
+<!--                                            idCheck = false;-->
+<!--                                        } else {-->
+<!--                                            idCheck = true;-->
+<!--                                        }-->
 
-                                        /* 비밀번호 유효성 검사 */
-                                        if (pw == "") {
-                                            pwCheck = false;
-                                        } else {
-                                            pwCheck = true;
-                                        }
+<!--                                        /* 비밀번호 유효성 검사 */-->
+<!--                                        if (pw == "") {-->
+<!--                                            pwCheck = false;-->
+<!--                                        } else {-->
+<!--                                            pwCheck = true;-->
+<!--                                        }-->
 
-                                        /* 이름 유효성 검사 */
-                                        if (name == "") {
-                                            nameCheck = false;
-                                        } else {
-                                            nameCheck = true;
-                                        }
+<!--                                        /* 이름 유효성 검사 */-->
+<!--                                        if (name == "") {-->
+<!--                                            nameCheck = false;-->
+<!--                                        } else {-->
+<!--                                            nameCheck = true;-->
+<!--                                        }-->
 
-                                        /* 전화번호 유효성 검사 */
-                                        if (phone == "") {
-                                            phoneCheck = false;
-                                        } else {
-                                            phoneCheck = true;
-                                        }
+<!--                                        /* 전화번호 유효성 검사 */-->
+<!--                                        if (phone == "") {-->
+<!--                                            phoneCheck = false;-->
+<!--                                        } else {-->
+<!--                                            phoneCheck = true;-->
+<!--                                        }-->
 
-                                        /* 최종 유효성 검사 */
-                                        if (idCheck && idckCheck && pwCheck && nameCheck && phoneCheck) {
-                                            /* 권한 유효성 검사 */
-                                            if (!level) {
-                                                alert("권한을 선택해주세요.");
-                                                $("#level").focus();
-                                                return false;
-                                            } else {
-                                                $("#enroll_form").attr("action", "/enrollMember.do");
-                                                $("#enroll_form").submit();
-                                                alert("등록이 완료되었습니다.");
-                                            }
-                                        } else {
-                                            alert("공란 없이 입력해주세요.");
-                                        }
-                                        return false;
-                                    });
-                            });
+<!--                                        /* 최종 유효성 검사 */-->
+<!--                                        if (idCheck && idckCheck && pwCheck && nameCheck && phoneCheck) {-->
+<!--                                            /* 권한 유효성 검사 */-->
+<!--                                            if (!level) {-->
+<!--                                                alert("권한을 선택해주세요.");-->
+<!--                                                $("#level").focus();-->
+<!--                                                return false;-->
+<!--                                            } else {-->
+<!--                                                $("#enroll_form").attr("action", "/enrollMember.do");-->
+<!--                                                $("#enroll_form").submit();-->
+<!--                                                alert("등록이 완료되었습니다.");-->
+<!--                                            }-->
+<!--                                        } else {-->
+<!--                                            alert("공란 없이 입력해주세요.");-->
+<!--                                        }-->
+<!--                                        return false;-->
+<!--                                    });-->
+<!--                            });-->
 
 
-        /* 아이디 중복검사 */
-        $("#idCheck_button").click(
-                function() {
-                    var id = $('#id_input').val();
+<!--        /* 아이디 중복검사 */-->
+<!--        $("#idCheck_button").click(-->
+<!--                function() {-->
+<!--                    var id = $('#id_input').val();-->
 
-                    if (id == "") {
-                        alert("아이디를 입력해주세요.");
-                        return false;
-                    }
+<!--                    if (id == "") {-->
+<!--                        alert("아이디를 입력해주세요.");-->
+<!--                        return false;-->
+<!--                    }-->
 
-                    var data = {
-                        id : id
-                    }
+<!--                    var data = {-->
+<!--                        id : id-->
+<!--                    }-->
 
-                    $.ajax({
-                        type : "post",
-                        url : "/idCheck.do",
-                        data : data,
-                        success : function(result) {
-                            console.log(data);
-                            console.log("성공 여부 : " + result);
-                            if (result != "fail") {
-                                // 아이디 중복X
-                                alert("사용 가능한 아이디입니다.");
-                                idckCheck = true;
-                            }
+<!--                    $.ajax({-->
+<!--                        type : "post",-->
+<!--                        url : "/idCheck.do",-->
+<!--                        data : data,-->
+<!--                        success : function(result) {-->
+<!--                            console.log(data);-->
+<!--                            console.log("성공 여부 : " + result);-->
+<!--                            if (result != "fail") {-->
+<!--                                // 아이디 중복X-->
+<!--                                alert("사용 가능한 아이디입니다.");-->
+<!--                                idckCheck = true;-->
+<!--                            }-->
 
-                            else {
-                                // 아이디 중복
-                                alert("이미 사용 중인 아이디입니다.");
-                                idckCheck = false;
-                            }
+<!--                            else {-->
+<!--                                // 아이디 중복-->
+<!--                                alert("이미 사용 중인 아이디입니다.");-->
+<!--                                idckCheck = false;-->
+<!--                            }-->
 
-                        }// success 종료
-                    }); // ajax 종료
+<!--                        }// success 종료-->
+<!--                    }); // ajax 종료-->
 
-                });// function 종료
-  </script>
+<!--                });// function 종료-->
+
+
+<!--        /* 전화번호 자동 하이픈 */-->
+<!--        const autoHyphen = (target) => {-->
+<!--          target.value = target.value-->
+<!--            .replace(/[^0-9]/g, '')-->
+<!--            .replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`);-->
+<!--        }-->
+<!--  </script>-->

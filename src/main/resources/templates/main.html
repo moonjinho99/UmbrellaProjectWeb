@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>UmbrellaMain</title>
+    <script type="text/javascript"
+            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6223596a1a53a72a213eade806c58952&libraries=services"></script>
+    <script src="http://code.jquery.com/jquery-latest.min.js"></script>
+    <link rel="stylesheet" href="/css/main.css">
+    <script type="text/javascript" src="/script/main.js"></script>
+</head>
+<body>
+<div id="wrap">
+    <!--헤더영역-->
+    <div class="header">
+        <div class="logo">
+            <a href="/admin-main"><img src="/images/umbrella_logo.png" alt="로고"></a>
+        </div>
+        <div class="">
+            <span th:text="${loginUser}"></span>님 환영합니다.
+            <span><a href="logout.do">로그아웃</a></span>
+        </div>
+    </div>
+
+    <a onclick="centerUpdate(${loginUser.regId})">정보수정</a>
+</div>
+
+<nav id="menu">
+    <ul class="menu_ul">
+        <li>
+            <a class="aLink">등 록</a>
+            <ul class="submenu">
+                <li class="subLi">
+                    <a class="aLink2" onclick="menu_click(this,'center')">우산 등록</a>
+                    <a class="aLink2" onclick="menu_click(this,'center')">보관함 등록</a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+    <ul class="menu_ul">
+        <li>
+            <a class="aLink">관 리</a>
+            <ul class="submenu">
+                <li class="subLi">
+                    <a class="aLink2" onclick="menu_click(this,'center')">우산 관리</a>
+                    <a class="aLink2" onclick="menu_click(this,'center')">보관함 관리</a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+
+    <div th:with="value=${level}">
+        <ul class="menu_ul" th:if="${value == 2}">
+            <li>
+                <a class="aLink">관 리 자</a>
+                <ul class="submenu">
+                    <li class="subLi">
+                        <a class="aLink2" onclick="menu_click(this,'admin')">기관 등록</a>
+                        <a class="aLink2" onclick="menu_click(this,'admin')">기관 관리</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<section id="ajaxSection" style="width: 83%; height: 90vh;">
+    <div id="map" style="width: 100%; height: 100%;"></div>
+</section>
+</div>
+
+<script>
+    var mapContainer = document.getElementById('map'); // 지도를 표시할 div
+    var map;
+    var geocoder = new kakao.maps.services.Geocoder();
+    var locations=[];
+
+    if (navigator.geolocation) {
+
+        // GeoLocation을 이용해서 접속 위치를 얻어옵니다
+        navigator.geolocation.getCurrentPosition(function(position) {
+
+            var lat = position.coords.latitude, // 위도
+                lon = position.coords.longitude; // 경도
+
+            mapOption = {
+            center: new kakao.maps.LatLng(lat, lon), // 지도의 중심좌표
+            level: 3 // 지도의 확대 레벨
+            };
+
+            map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+
+
+          });
+
+    } else { // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
+        mapOption = {
+            center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+            level: 3 // 지도의 확대 레벨
+            };
+        map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+        }
+
+
+
+        // 보관기관 마커 생성
+        // 주소 목록을 순회하며 각 주소에 대한 좌표를 찾고 마커로 표시
+
+        //$.ajax로 getallCenter 연결
+        $.ajax({
+            url: '/getAllCenter',
+            type: 'POST',
+            async:false,
+            success:   function(data) {
+                locations = data;
+                console.log(locations);
+            }
+
+        });
+
+
+// 보관기관 마커 생성
+// 주소 목록을 순회하며 각 주소에 대한 좌표를 찾고 마커로 표시
+for (var i = 0; i < locations.length; i++) {
+    (function(location) {
+        geocoder.addressSearch(location.centerAddr, function(result, status) {
+            if (status === kakao.maps.services.Status.OK) {
+                var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+                var marker = new kakao.maps.Marker({
+                    map: map,
+                    position: coords
+                });
+
+                var infowindow = new kakao.maps.InfoWindow({
+                    content: '<div style="width:150px;text-align:center;padding:6px 0;">' + location.name + '</div>'
+                });
+
+                kakao.maps.event.addListener(marker, 'mouseover', function() {
+                    infowindow.open(map, marker);
+                });
+                kakao.maps.event.addListener(marker, 'mouseout', function() {
+                    infowindow.close();
+                });
+            }
+        });
+    })(locations[i]);
+}
+
+</script>
+</body>
+</html>

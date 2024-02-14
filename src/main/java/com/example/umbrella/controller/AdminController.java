@@ -31,15 +31,16 @@ public class AdminController {
 //            return "/logout.do";
 //        }
 
-        return "admin/main";
+        return "/main";
     }
 
     @GetMapping(value = "/admin-main-menu")
-    public String mainmenuActionAdmin(@RequestParam String buttonValue, Model model) {
+    public String mainmenuActionAdmin(@RequestParam("buttonValue") String buttonValue, Model model) {
         System.out.println(buttonValue);
         String result = "";
         if (buttonValue.equals("기관 등록")) {
             result = "/admin/admin_center_enroll";
+            System.out.println(result);
         } else if (buttonValue.equals("기관 관리")) {
             result = "/admin/admin_center_manage";
         }
