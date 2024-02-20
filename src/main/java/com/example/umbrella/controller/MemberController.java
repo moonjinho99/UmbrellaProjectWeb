@@ -150,28 +150,17 @@ public class MemberController {
             if (passwordEncoding().matches(rawPw, encodePw)) { // 비밀번호 일치
                 mvo.setPw("");
                 session.setAttribute("loginInfo", mvo);
-//                session.setMaxInactiveInterval(10);
 
                 rttr.addFlashAttribute("loginUser", mvo.getName());
                 rttr.addFlashAttribute("level", mvo.getLevel());
                 System.out.println("level : " + mvo.getLevel());
 
                 page = "redirect:/admin-main";
-
-//                if (mvo.getLevel() == 1) {   // 기관인 경우
-//                    System.out.println("level : " + mvo.getLevel());
-//
-//                    page = "redirect:/center-main";
-//                } else if (mvo.getLevel() == 2) {    // 관리자인 경우
-//                    System.out.println("level : " + mvo.getLevel());
-//
-//                    page = "redirect:/admin-main";
-//                }
             } else {
                 rttr.addFlashAttribute("result", 0);
                 System.out.println("result : " + rttr.addFlashAttribute("result", 0));
 
-                return "redirect:/umbrella-login";
+                page = "redirect:/umbrella-login";
             }
         } else {
             rttr.addFlashAttribute("result", 1);

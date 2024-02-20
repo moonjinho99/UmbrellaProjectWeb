@@ -27,10 +27,6 @@ public class AdminController {
         System.out.println("loginUser : " + member.getName());
         System.out.println("level : " + member.getLevel());
 
-//        if (session.getMaxInactiveInterval() == 0) {
-//            return "/logout.do";
-//        }
-
         return "/main";
     }
 

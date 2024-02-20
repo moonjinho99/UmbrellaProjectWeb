@@ -34,7 +34,6 @@ function menu_click(ths,id){
 
 }
 
-        // 임시로 잠깐 여기 넣어놨어용
         /* 전화번호 자동 하이픈 */
         const autoHyphen = (target) => {
           target.value = target.value
