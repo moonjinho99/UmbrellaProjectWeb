@@ -63,7 +63,7 @@
                         },
                         {
                             title: "삭제",
-                            data: 'regId',
+                            data: 'centercode',
                             render: function (data) {
                                 return '<button onclick="deleteCenter(\'' + data + '\')">삭제</button>'
                             }
@@ -212,13 +212,13 @@
         $('.modal').css('display', 'none');
     }
 
-    function deleteCenter(regId) {
+    function deleteCenter(centercode) {
             $.ajax({
-                type: 'GET',
+                type: 'POST',
                 url: '/delete-center',
-                data: { id: regId },
+                data: { centercode: centercode },
                 success: function (data) {
-                    window.reload();
+
                 },
                 error: function (xhr, status, error) {
                     console.error("에러 발생:", error);

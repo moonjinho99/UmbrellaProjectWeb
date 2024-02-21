@@ -9,4 +9,6 @@ import java.util.List;
 public interface LockerMapper {
 
     public List<LockerDto> getlocker();
+    public int countLocker(String centercode);
+    public void deleteLocker(String centercode);
 }

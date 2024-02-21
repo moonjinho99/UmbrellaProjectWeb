@@ -1,6 +1,7 @@
 package com.example.umbrella.controller;
 
 
+import com.example.umbrella.Service.LockerService;
 import com.example.umbrella.Service.MemberService;
 import com.example.umbrella.dto.MemberDto;
 import jakarta.servlet.http.HttpSession;
@@ -26,6 +27,10 @@ public class AdminController {
 
     @Autowired
     CenterService centerService;
+    @Autowired
+    LockerService lockerService;
+    @Autowired
+    MemberService memberService;
 
     public PasswordEncoder passwordEncoding() {
         return new BCryptPasswordEncoder();
@@ -68,7 +73,7 @@ public class AdminController {
         return "header";
     }
 
-    @RequestMapping("getCenterList")
+    @PostMapping("getCenterList")
     public @ResponseBody List<CenterDto> getCenterList(String id){
         List<CenterDto> data = centerService.getAllCenter();
         return data;
@@ -96,9 +101,19 @@ public class AdminController {
         centerService.updateCenter(center);
     }
 
-    @GetMapping("delete-center")
-    public void deleteCenter(@RequestParam("id")  String id){
-        centerService.deleteCenter(id);
+    @PostMapping("/delete-center")
+    public void deleteCenter(@RequestParam("centercode") String centercode){
+        System.out.println("deleteCenter 진입=================================>");
+        int locker_count = lockerService.countLocker(centercode);
+        String regId="";
+        if(locker_count==0){
+            regId=centerService.findRegId(centercode);
+        }else{
+            lockerService.deleteLocker(centercode);
+            regId=centerService.findRegId(centercode);
+        }
+        centerService.deleteCenter(regId);
+        memberService.deleteMember(regId);
     }
 
 

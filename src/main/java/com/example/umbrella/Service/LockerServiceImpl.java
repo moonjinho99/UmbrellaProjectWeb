@@ -19,4 +19,8 @@ public class LockerServiceImpl implements LockerService{
     public List<LockerDto> getlocker() {
         return lockerMapper.getlocker();
     }
+    @Override
+    public int countLocker(String centercode){return lockerMapper.countLocker(centercode);}
+    @Override
+    public void deleteLocker(String centercode){lockerMapper.deleteLocker(centercode);}
 }

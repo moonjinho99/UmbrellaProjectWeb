@@ -3,8 +3,13 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.umbrella.mapper.LockerMapper">
-
-<select id="getlocker" resultType="com.example.umbrella.dto.LockerDto">
-    select * from locker
-</select>
+    <select id="getlocker" resultType="com.example.umbrella.dto.LockerDto">
+        select * from locker
+    </select>
+    <select id="countLocker" parameterType="String">
+        SELECT count(*) FROM locker WHERE centercode = #{centercode}
+    </select>
+    <delete id="deleteLocker" parameterType="String">
+        DELETE FROM locker WHERE centercode = #{centercode}
+    </delete>
 </mapper>

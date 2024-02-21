@@ -20,6 +20,7 @@ public class CenterServiceImpl implements CenterService{
     }
     public CenterDto getCenter(String centercode) { return centerMapper.getCenter(centercode);}
     public void updateCenter(CenterDto center){ centerMapper.updateCenter(center); centerMapper.updateMember(center);}
-    public void deleteCenter(String id){centerMapper.deleteCenter(id); }
+    public String findRegId(String centercode){return centerMapper.findRegId(centercode);}
+    public void deleteCenter(String regId){centerMapper.deleteCenter(regId); }
 
 }

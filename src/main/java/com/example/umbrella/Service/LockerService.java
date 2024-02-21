@@ -6,5 +6,7 @@ import java.util.List;
 
 public interface LockerService {
     public List<LockerDto> getlocker();
+    public int countLocker(String centercode);
+    public void deleteLocker(String centercode);
 
 }

@@ -36,5 +36,7 @@
         insert into member (id, pw, name, phone) values (
         #{id}, #{pw}, #{name}, #{phone})
     </insert>
-
+    <delete id="deleteMember" parameterType="String">
+        DELETE FROM member WHERE id = #{id}
+    </delete>
 </mapper>

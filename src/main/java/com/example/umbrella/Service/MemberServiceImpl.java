@@ -49,4 +49,7 @@ public class MemberServiceImpl implements MemberService {
     public void joinUser(MemberDto member) {
         memberMapper.joinUser(member);
     }
+
+    @Override
+    public void deleteMember(String id){ memberMapper.deleteMember(id);}
 }

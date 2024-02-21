@@ -24,4 +24,5 @@ public interface MemberMapper {
 
     // 회원가입(앱)
     void joinUser(MemberDto member);
+    void deleteMember(String id);
 }
