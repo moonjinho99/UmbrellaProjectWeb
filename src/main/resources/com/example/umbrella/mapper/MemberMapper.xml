@@ -36,4 +36,5 @@
         insert into member (id, pw, name, phone) values (
         #{id}, #{pw}, #{name}, #{phone})
     </insert>
+
 </mapper>

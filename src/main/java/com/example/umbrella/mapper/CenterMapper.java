@@ -8,4 +8,8 @@ import java.util.List;
 @Mapper
 public interface CenterMapper {
     public List<CenterDto> getAllCenter();
+    public CenterDto getCenter(String centercode);
+    public void updateCenter(CenterDto center);
+    public void updateMember(CenterDto center);
+    public void deleteCenter(String id);
 }

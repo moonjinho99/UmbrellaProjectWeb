@@ -1,9 +1,231 @@
-<div>
-    <table>
+<html lang="en">
+<link rel="stylesheet" href="/css/main.css">
+<head>
+    <meta charset="UTF-8">
+    <title>UmbrellaMain</title>
+    <link rel="stylesheet" href="//cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+    <script src="//code.jquery.com/jquery-3.4.1.js"></script>
+    <script src="//code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+    <script type="text/javascript" src="//cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+</head>
+<div id="header"></div>
+<div style="width: 83%; height: 90vh; position: relative;">
+    <table id="centerListTable" class="table table-bordered">
+        <thead>
         <tr>
-           <th>기관코드</th>
-
+            <th>CODE</th>
+            <th>ID</th>
+            <th>기관명</th>
+            <th>전화번호</th>
+            <th>주소</th>
+            <th>수정</th>
+            <th>삭제</th>
         </tr>
+        </thead>
+<!--        <tbody>-->
+<!--        <tr th:each="center:${centerList}">-->
+<!--            <td th:text="${center.centercode}"></td>-->
+<!--            <td th:text="${center.regId}"></td>-->
+<!--            <td th:text="${center.pw}"></td>-->
+<!--            <td th:text="${center.name}"></td>-->
+<!--            <td th:text="${center.phone}"></td>-->
+<!--            <td th:text="${center.centerAddr}"></td>-->
+<!--        </tr>-->
+<!--        </tbody>-->
     </table>
-
+    <div class="modal"><div id="update_modal"></div></div>
 </div>
+<script>
+
+    $(document).ready(function () {
+        var table = $("#centerListTable").DataTable();
+        table.destroy();
+
+        $.ajax({
+            url: "getCenterList",
+            type: "POST",
+            success: function (data) {
+                $("#centerListTable").dataTable({
+                    data: data,
+                    columns: [
+                        { data: 'centercode' },
+                        { data: 'regId' },
+                        { data: 'name' },
+                        { data: 'phone' },
+                        { data: 'centerAddr' },
+                        {
+                            title: "수정",
+                            data: 'centercode',
+                            render: function (data) {
+                                return '<button onclick="updateCenterHTML(\'' + data + '\')">수정</button>'
+                            }
+                        },
+                        {
+                            title: "삭제",
+                            data: 'regId',
+                            render: function (data) {
+                                return '<button onclick="deleteCenter(\'' + data + '\')">삭제</button>'
+                            }
+                        },
+                    ]
+                });
+
+            },
+            error: function (request, status, error) {
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            }
+
+
+
+        });
+    });
+
+
+    function updateCenterHTML(centercode) {
+            $.ajax({
+                type: 'POST',
+                url: '/update-center-html',
+                data: { centercode: centercode },
+                success: function (data) {
+
+                    //모달 부분 html
+
+                    $('#update_modal').html(`
+                    <div><label>CODE</label><input name="centercode" type="text" value="${data.centercode}" disabled></div>
+                    <div><label>ID</label><input name="id" type="text" value="${data.id}" disabled></div>
+                    <div><label>PASSWORD</label><input name="pw" type="password" placeholder="비밀번호 변경 시 작성"></div>
+                    <div><label>기관명</label><input name="name" type="text" value="${data.name}"></div>
+                    <div><label>전화번호</label><input name="phone" type="text" value="${data.phone}"></div>
+                    <div><label>주소</label><input name="beforeAddr" type="text" value="${data.centerAddr}" disabled><input type="button" value="주소변경" onclick="showPost()"></div>
+                    <div class="daum_post"></div>
+                    <div><input type="button" value="수정" onclick="updateCenterPOST()">
+                    <input type="button" value="취소" onclick="updateCancle()"</div>
+                    `);
+                    $('.modal').css('display', 'block');
+
+                },
+                error: function (xhr, status, error) {
+                    console.error("에러 발생:", error);
+                }
+            });
+        }
+
+       function showPost() {
+
+        //주소 input html 부분
+
+        $('.daum_post').html(`
+            <input type="text" id="postcode" placeholder="우편번호">
+            <input type="button" onclick="execDaumPostcode()" value="우편번호 찾기"><br>
+            <input type="text" name="afterAddr1" id="address" placeholder="주소"><br>
+            <input type="text" name="afterAddr2" id="detailAddress" placeholder="상세주소">
+            <input type="text" id="extraAddress" placeholder="참고항목">
+        `);
+    }
+
+
+    function execDaumPostcode() {
+        new daum.Postcode({
+            oncomplete: function(data) {
+
+                var addr = ''; // 주소 변수
+                var extraAddr = ''; // 참고항목 변수
+
+
+                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
+                    addr = data.roadAddress;
+                } else { // 사용자가 지번 주소를 선택했을 경우(J)
+                    addr = data.jibunAddress;
+                }
+
+                if(data.userSelectedType === 'R'){
+                    if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
+                        extraAddr += data.bname;
+                    }
+                    if(data.buildingName !== '' && data.apartment === 'Y'){
+                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
+                    }
+                    if(extraAddr !== ''){
+                        extraAddr = ' (' + extraAddr + ')';
+                    }
+                    document.getElementById("extraAddress").value = extraAddr;
+
+                } else {
+                    document.getElementById("extraAddress").value = '';
+                }
+
+                document.getElementById('postcode').value = data.zonecode;
+                document.getElementById("address").value = addr;
+                document.getElementById("detailAddress").focus();
+            }
+        }).open();
+    }
+
+
+    function updateCenterPOST(){
+        var centercode = $('input[name=centercode]').val();
+        var id = $('input[name=id]').val();
+        var pw = $('input[name=pw]').val();
+        if(pw===undefined){
+            pw=" ";
+        }
+        var name = $('input[name=name]').val();
+        var phone = $('input[name=phone]').val();
+        var beforeAddr = $('input[name=beforeAddr]').val();
+        var afterAddr1 = $('input[name=afterAddr1]').val();
+        var afterAddr2 = $('input[name=afterAddr2]').val();
+        var afterAddr = afterAddr1+" "+afterAddr2;
+
+        console.log(centercode, id, pw, name, phone, beforeAddr, afterAddr);
+
+        if((afterAddr1===undefined||afterAddr1===""||afterAddr1===null)||(afterAddr2===undefined||afterAddr2===""||afterAddr2===null)){
+        console.log("주소변경안함");
+            $.ajax({
+                    type: 'POST',
+                    url: '/update-center-post',
+                    data: {centercode: centercode, id: id, pw: pw, name: name, phone: phone, centerAddr: beforeAddr},
+                    success: function (data) {
+
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("에러 발생:", error);
+                    }
+                });
+        }else{
+        console.log("주소변경");
+            $.ajax({
+                    type: 'POST',
+                    url: '/update-center-post',
+                    data: {centercode: centercode, id: id, pw: pw, name: name, phone: phone, centerAddr: afterAddr},
+                    success: function (data) {
+
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("에러 발생:", error);
+                    }
+                });
+        }
+    }
+
+    function updateCancle(){
+        $('.modal').css('display', 'none');
+    }
+
+    function deleteCenter(regId) {
+            $.ajax({
+                type: 'GET',
+                url: '/delete-center',
+                data: { id: regId },
+                success: function (data) {
+                    window.reload();
+                },
+                error: function (xhr, status, error) {
+                    console.error("에러 발생:", error);
+                }
+            });
+        }
+
+
+</script>
+</html>

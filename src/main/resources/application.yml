@@ -33,3 +33,5 @@ spring:
     prefix: classpath:templates/
     suffix: .html
     mode: HTML5
+    check-template-location: true
+    cache: false # default true

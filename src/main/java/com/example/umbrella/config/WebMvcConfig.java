@@ -18,9 +18,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
 
         log.debug("LoggerInterceptor is registered.");
 
-        registry.addInterceptor(new LoginCheckInterceptor())
-                .addPathPatterns("/**")
-                .excludePathPatterns("/umbrella-login", "/login.do", "/css/**", "/images/**", "/js/**");
+//        registry.addInterceptor(new LoginCheckInterceptor())
+//                .addPathPatterns("/**")
+//                .excludePathPatterns("/umbrella-login", "/login.do", "/css/**", "/images/**", "/js/**");
     }
 
 

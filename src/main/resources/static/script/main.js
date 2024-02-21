@@ -17,7 +17,6 @@ function menu_click(ths,id){
                     }
                 });
      }else{
-     console.log("ddd");
      console.log(buttonValue);
         $.ajax({
                     type: 'GET',
@@ -41,6 +40,7 @@ function menu_click(ths,id){
             .replace(/^(\d{2,3})(\d{3,4})(\d{4})$/, `$1-$2-$3`);
         }
 
+
 //admin js 시작
 //function reset(id){
 //
@@ -60,5 +60,20 @@ function menu_click(ths,id){
 //
 //   }
 //}
+
+function updateCenterGET(centercode){
+    $.ajax({
+                        type: 'GET',
+                        url: '/update-center',
+                        data: {centercode : centercode},
+                        success: function (data) {
+                            $('#ajaxSection').html(data);
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("에러 발생:", error);
+                        }
+                    });
+}
+
 //admin js 끝
 
