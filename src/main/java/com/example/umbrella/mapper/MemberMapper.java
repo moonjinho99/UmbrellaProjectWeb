@@ -1,5 +1,6 @@
 package com.example.umbrella.mapper;
 
+import com.example.umbrella.dto.CenterDto;
 import com.example.umbrella.dto.LockerDto;
 import com.example.umbrella.dto.MemberDto;
 import org.apache.ibatis.annotations.Mapper;
@@ -24,5 +25,10 @@ public interface MemberMapper {
 
     // 회원가입(앱)
     void joinUser(MemberDto member);
+
+    // center 테이블에 정보 등록
+    void createCenter(CenterDto center);
+
     void deleteMember(String id);
+
 }

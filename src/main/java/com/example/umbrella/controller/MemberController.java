@@ -1,6 +1,7 @@
 package com.example.umbrella.controller;
 
 import com.example.umbrella.Service.MemberService;
+import com.example.umbrella.dto.CenterDto;
 import com.example.umbrella.dto.MemberDto;
 import com.example.umbrella.dto.UmbrellaDto;
 import jakarta.servlet.http.HttpServletRequest;
@@ -98,6 +99,17 @@ public class MemberController {
         System.out.println("encodePw : " + encodePw);
 
         memberDto.setPw(encodePw);
+
+        String phoneReg = "(\\d{2,3})(\\d{3,4})(\\d{4})";
+        String phone = "";  // 입력한 휴대폰 번호
+        String afterPhone = ""; // 하이픈 추가한 휴대폰 번호
+
+        phone = memberDto.getPhone();
+        afterPhone = phone.replaceAll(phoneReg, "$1-$2-$3");
+        System.out.println("phone : " + phone);
+        System.out.println("afterPhone : " + afterPhone);
+
+        memberDto.setPhone(afterPhone);
 
         memberService.joinUser(memberDto);
 
@@ -219,6 +231,16 @@ public class MemberController {
         member.setPw(encodePw);
 
         memberService.createMember(member);
+
+        if (member.getLevel() == 1) {  // 기관인 경우
+            CenterDto center = new CenterDto();
+
+            center.setCentercode("");
+            center.setCenterAddr("");
+            center.setRegId(member.getId());
+
+            memberService.createCenter(center);
+        }
 
         return "redirect:/admin-main";
     }

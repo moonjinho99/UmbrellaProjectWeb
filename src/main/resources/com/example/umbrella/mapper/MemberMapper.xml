@@ -4,10 +4,6 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.example.umbrella.mapper.MemberMapper">
 
-    <select id="getAllMemberList" resultType="com.example.umbrella.dto.MemberDto">
-        select * from member
-    </select>
-
     <!--관리자 등록 여부 확인-->
     <select id="firstAdmin" resultType="int">
         select count(*) from member where level = 2
@@ -36,6 +32,12 @@
         insert into member (id, pw, name, phone) values (
         #{id}, #{pw}, #{name}, #{phone})
     </insert>
+
+    <!-- center 테이블에 정보 등록 -->
+    <insert id="createCenter" parameterType="com.example.umbrella.dto.CenterDto">
+        insert into center (centercode, centerAddr, regId) values (#{centercode}, #{centerAddr}, #{regId})
+    </insert>
+
     <delete id="deleteMember" parameterType="String">
         DELETE FROM member WHERE id = #{id}
     </delete>

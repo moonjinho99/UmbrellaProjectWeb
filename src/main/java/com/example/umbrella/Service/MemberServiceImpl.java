@@ -1,5 +1,6 @@
 package com.example.umbrella.Service;
 
+import com.example.umbrella.dto.CenterDto;
 import com.example.umbrella.dto.MemberDto;
 import com.example.umbrella.mapper.MemberMapper;
 import lombok.RequiredArgsConstructor;
@@ -48,6 +49,12 @@ public class MemberServiceImpl implements MemberService {
     @Override
     public void joinUser(MemberDto member) {
         memberMapper.joinUser(member);
+    }
+
+    // center 테이블에 정보 등록
+    @Override
+    public void createCenter(CenterDto center) {
+        memberMapper.createCenter(center);
     }
 
     @Override
