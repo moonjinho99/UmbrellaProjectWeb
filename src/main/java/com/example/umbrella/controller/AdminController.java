@@ -73,14 +73,16 @@ public class AdminController {
         return "header";
     }
 
+
+    @ResponseBody
     @PostMapping("getCenterList")
-    public @ResponseBody List<CenterDto> getCenterList(String id){
+    public List<CenterDto> getCenterList(@RequestParam("id") String id){
         List<CenterDto> data = centerService.getAllCenter();
         return data;
     }
 
     @PostMapping("update-center-html")
-    public @ResponseBody CenterDto getCenter(String centercode){
+    public @ResponseBody CenterDto getCenter(@RequestParam("centercode") String centercode){
         CenterDto center = centerService.getCenter(centercode);
         log.info(center.toString());
         return center;

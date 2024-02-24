@@ -1,13 +1,13 @@
 <html lang="en">
-<link rel="stylesheet" href="/css/main.css">
+<!--<link rel="stylesheet" href="/css/main.css">-->
 <head>
     <meta charset="UTF-8">
     <title>UmbrellaMain</title>
-    <link rel="stylesheet" href="//cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
-    <script src="//code.jquery.com/jquery-3.4.1.js"></script>
-    <script src="//code.jquery.com/jquery-3.4.1.min.js"></script>
+    <!--<script src="//code.jquery.com/jquery-3.4.1.js"></script>
+    <script src="//code.jquery.com/jquery-3.4.1.min.js"></script>-->
+    <!--<link rel="stylesheet" href="//cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
-    <script type="text/javascript" src="//cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="//cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>-->
 </head>
 <div id="header"></div>
 <div style="width: 83%; height: 90vh; position: relative;">
@@ -37,14 +37,14 @@
     <div class="modal"><div id="update_modal"></div></div>
 </div>
 <script>
-
     $(document).ready(function () {
         var table = $("#centerListTable").DataTable();
         table.destroy();
 
         $.ajax({
-            url: "getCenterList",
+            url: "/getCenterList",
             type: "POST",
+            data: "id=aa",
             success: function (data) {
                 $("#centerListTable").dataTable({
                     data: data,
@@ -225,7 +225,6 @@
                 }
             });
         }
-
-
 </script>
 </html>
+

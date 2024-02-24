@@ -9,6 +9,5 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 public class UmbrellaApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(UmbrellaApplication.class, args);
-
 	}
 }
