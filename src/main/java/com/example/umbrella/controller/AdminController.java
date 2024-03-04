@@ -3,11 +3,12 @@ package com.example.umbrella.controller;
 
 import com.example.umbrella.Service.LockerService;
 import com.example.umbrella.Service.MemberService;
+import com.example.umbrella.Service.ReturnBoxService;
 import com.example.umbrella.dto.MemberDto;
+import com.example.umbrella.dto.ReturnBoxDto;
 import jakarta.servlet.http.HttpSession;
 import com.example.umbrella.Service.CenterService;
 import com.example.umbrella.dto.CenterDto;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,8 @@ public class AdminController {
     LockerService lockerService;
     @Autowired
     MemberService memberService;
+    @Autowired
+    ReturnBoxService returnBoxService;
 
     public PasswordEncoder passwordEncoding() {
         return new BCryptPasswordEncoder();
@@ -62,17 +65,6 @@ public class AdminController {
         return result;
     }
 
-    //가연 datatables 연습 매핑
-    @GetMapping("/adminCenterList")
-    public String admin_center_manage_GET(){
-        return "admin/admin_center_manage";
-    }
-
-    @GetMapping("/header")
-    public String headerGET(){
-        return "header";
-    }
-
 
     @ResponseBody
     @PostMapping("getCenterList")
@@ -88,23 +80,39 @@ public class AdminController {
         return center;
     }
 
-    @ResponseBody
+
     @PostMapping("update-center-post")
-    public void updateCenter(@RequestParam("centercode") String centercode,@RequestParam("id") String id,@RequestParam("pw") String pw,@RequestParam("name") String name,@RequestParam("phone") String phone,@RequestParam("centerAddr") String centerAddr){
+    public String updateCenterPOST(@RequestParam("centercode") String centercode,@RequestParam("id") String id,@RequestParam("pw") String pw,@RequestParam("name") String name,@RequestParam("phone") String phone,@RequestParam("centerAddr") String centerAddr){
+        System.out.println("updateCenter 진입=================================>");
         System.out.println(centercode+id+pw+name+phone+centerAddr);
         CenterDto center = new CenterDto();
-        center.setCentercode(centercode);
-        center.setId(id);
-        String password = passwordEncoding().encode(pw);
-        center.setPw(password);
-        center.setName(name);
-        center.setPhone(phone);
-        center.setCenterAddr(centerAddr);
-        centerService.updateCenter(center);
+
+        if(!pw.isEmpty()) {
+            center.setCentercode(centercode);
+            center.setId(id);
+            pw = passwordEncoding().encode(pw);
+            center.setPw(pw);
+            center.setName(name);
+            center.setPhone(phone);
+            center.setCenterAddr(centerAddr);
+            centerService.updateCenter(center);
+        }else{
+            center.setCentercode(centercode);
+            center.setId(id);
+            center.setName(name);
+            center.setPhone(phone);
+            center.setCenterAddr(centerAddr);
+            centerService.updateCenterNotPw(center);
+        }
+
+
+        System.out.println("<=================================updateCenter 완료");
+
+        return "/admin/admin_center_manage";
     }
 
     @PostMapping("/delete-center")
-    public void deleteCenter(@RequestParam("centercode") String centercode){
+    public String deleteCenter(@RequestParam("centercode") String centercode){
         System.out.println("deleteCenter 진입=================================>");
         int locker_count = lockerService.countLocker(centercode);
         String regId="";
@@ -116,6 +124,26 @@ public class AdminController {
         }
         centerService.deleteCenter(regId);
         memberService.deleteMember(regId);
+        System.out.println("<=================================deleteCenter 완료");
+        return "/admin/admin_center_manage";
+    }
+
+    @ResponseBody
+    @PostMapping("/getAllReturnBox")
+    public List<ReturnBoxDto> getAllReturnBox(){
+        System.out.println("<=================================getAllReturnBox 진입");
+        List<ReturnBoxDto> returnBoxList = new ArrayList<ReturnBoxDto>();
+        returnBoxList = returnBoxService.getAllReturnBox();
+        log.debug("returnBoxList : "+returnBoxList.toString());
+        System.out.println("<=================================getAllReturnBox 완료");
+
+        return returnBoxList;
+    }
+
+    @GetMapping("/marker-click")
+    public String markerClickGoCenterManage(String centername, Model model){
+        model.addAttribute("centername",centername);
+        return "/admin/admin_center_manage";
     }
 
 

@@ -8,6 +8,7 @@ public interface CenterService {
     public List<CenterDto> getAllCenter();
     public CenterDto getCenter(String centercode);
     public void updateCenter(CenterDto center);
+    public void updateCenterNotPw(CenterDto center);
     public String findRegId(String centercode);
     public void deleteCenter(String regId);
 }

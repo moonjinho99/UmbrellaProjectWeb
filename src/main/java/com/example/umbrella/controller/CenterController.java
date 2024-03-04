@@ -35,12 +35,6 @@ public class CenterController {
         centerList = centerService.getAllCenter();
         log.debug("centerList : "+centerList.toString());
 
-        List<String> centerAddrList = new ArrayList<>();
-        for(CenterDto center : centerList){
-            centerAddrList.add(center.getCenterAddr());
-        }
-        log.debug("centerAddrList : "+centerAddrList.toString());
-
         return centerList;
     }
 

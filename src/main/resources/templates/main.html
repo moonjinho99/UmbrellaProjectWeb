@@ -5,6 +5,7 @@
     <title>UmbrellaMain</title>
     <script type="text/javascript"
             src="//dapi.kakao.com/v2/maps/sdk.js?appkey=6223596a1a53a72a213eade806c58952&libraries=services"></script>
+    <script src="//code.jquery.com/jquery-latest.js"></script>
     <script src="http://code.jquery.com/jquery-latest.min.js"></script>
     <link rel="stylesheet" href="//cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
     <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
@@ -24,8 +25,6 @@
             <span><a href="logout.do">로그아웃</a></span>
         </div>
     </div>
-
-    <a onclick="centerUpdate(${loginUser.regId})">정보수정</a>
 
     <div th:with="value=${level}">
         <nav id="menu">
@@ -80,7 +79,8 @@
     var mapContainer = document.getElementById('map'); // 지도를 표시할 div
     var map;
     var geocoder = new kakao.maps.services.Geocoder();
-    var locations=[];
+    var center_locations=[];
+    var return_locations=[];
 
     if (navigator.geolocation) {
 
@@ -111,48 +111,102 @@
 
 
         // 보관기관 마커 생성
-        // 주소 목록을 순회하며 각 주소에 대한 좌표를 찾고 마커로 표시
 
-        //$.ajax로 getallCenter 연결
         $.ajax({
             url: '/getAllCenter',
             type: 'POST',
             async:false,
             success:   function(data) {
-                locations = data;
-                console.log(locations);
+                center_locations = data;
+                console.log(center_locations);
             }
 
         });
 
 
-// 보관기관 마커 생성
-// 주소 목록을 순회하며 각 주소에 대한 좌표를 찾고 마커로 표시
-for (var i = 0; i < locations.length; i++) {
-    (function(location) {
-        geocoder.addressSearch(location.centerAddr, function(result, status) {
-            if (status === kakao.maps.services.Status.OK) {
-                var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
 
-                var marker = new kakao.maps.Marker({
-                    map: map,
-                    position: coords
-                });
+    for (var i = 0; i < center_locations.length; i++) {
+        (function(location) {
+            geocoder.addressSearch(location.centerAddr, function(result, status) {
+                if (status === kakao.maps.services.Status.OK) {
+                    var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
 
-                var infowindow = new kakao.maps.InfoWindow({
-                    content: '<div style="width:150px;text-align:center;padding:6px 0;">' + location.name + '</div>'
-                });
+                    var marker = new kakao.maps.Marker({
+                        map: map,
+                        position: coords
+                    });
 
-                kakao.maps.event.addListener(marker, 'mouseover', function() {
-                    infowindow.open(map, marker);
-                });
-                kakao.maps.event.addListener(marker, 'mouseout', function() {
-                    infowindow.close();
-                });
+                    var infowindow = new kakao.maps.InfoWindow({
+                        content: '<div style="width:150px;text-align:center;padding:6px 0;">' + location.name + location.phone + '</div>'
+                    });
+
+                    kakao.maps.event.addListener(marker, 'mouseover', function() {
+                        infowindow.open(map, marker);
+                    });
+
+                    kakao.maps.event.addListener(marker, 'mouseout', function() {
+                        infowindow.close();
+                    });
+
+                    kakao.maps.event.addListener(marker, 'click', function() {
+                    var centername = location.name;
+
+
+                       $.ajax({
+                            type: 'GET',
+                            url: '/marker-click',
+                            data: { centername : centername  },
+                            success: function (data) {
+                                $('#ajaxSection').html(data);
+                            },
+                            error: function (jqXHR, status, error) {
+                                alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+
+                            }
+
+                        });
+                    });
+                }
+            });
+        })(center_locations[i]);
+    }
+
+    // 반납 보관함 마커생성
+    $.ajax({
+            url: '/getAllReturnBox',
+            type: 'POST',
+            async:false,
+            success:   function(data) {
+                return_locations = data;
+                console.log(return_locations);
             }
+
         });
-    })(locations[i]);
-}
+
+    var imageSrc = '/images/return.png', // 마커 이미지 설정
+    imageSize = new kakao.maps.Size(64, 69),
+    imageOption = {offset: new kakao.maps.Point(27, 69)};
+
+    var markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+
+
+    for (var i = 0; i < return_locations.length; i++) {
+        (function(location) {
+            geocoder.addressSearch(location.returnBoxAddr, function(result, status) {
+                if (status === kakao.maps.services.Status.OK) {
+                    var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+                    var marker = new kakao.maps.Marker({
+                        map: map,
+                        position: coords,
+                        image: markerImage
+                    });
+                }
+            });
+        })(return_locations[i]);
+    }
+
+
 
 </script>
 </body>

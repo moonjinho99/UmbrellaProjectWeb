@@ -19,7 +19,8 @@ public class CenterServiceImpl implements CenterService{
         return centerMapper.getAllCenter();
     }
     public CenterDto getCenter(String centercode) { return centerMapper.getCenter(centercode);}
-    public void updateCenter(CenterDto center){ centerMapper.updateCenter(center); centerMapper.updateMember(center);}
+    public void updateCenter(CenterDto center){ centerMapper.updateCenter(center);}
+    public void updateCenterNotPw(CenterDto center){centerMapper.updateCenterNotPw(center);}
     public String findRegId(String centercode){return centerMapper.findRegId(centercode);}
     public void deleteCenter(String regId){centerMapper.deleteCenter(regId); }
 

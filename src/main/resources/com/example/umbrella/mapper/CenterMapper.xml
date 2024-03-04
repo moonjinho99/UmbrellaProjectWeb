@@ -12,6 +12,9 @@
     <update id="updateCenter" parameterType="com.example.umbrella.dto.CenterDto">
         UPDATE center A RIGHT JOIN member B ON B.id = A.regId SET B.pw = #{pw}, B.name = #{name}, B.phone = #{phone}, A.centerAddr = #{centerAddr} WHERE A.centercode = #{centercode} AND B.id = #{id}
     </update>
+    <update id="updateCenterNotPw" parameterType="com.example.umbrella.dto.CenterDto">
+        UPDATE center A RIGHT JOIN member B ON B.id = A.regId SET B.name = #{name}, B.phone = #{phone}, A.centerAddr = #{centerAddr} WHERE A.centercode = #{centercode} AND B.id = #{id}
+    </update>
     <select id="findRegId" parameterType="String">
         SELECT regId from center WHERE centercode = #{centercode}
     </select>
