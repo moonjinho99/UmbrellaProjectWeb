@@ -75,12 +75,15 @@
     </section>
 </div>
 
-<script>
+<script th:inline="javascript">
     var mapContainer = document.getElementById('map'); // 지도를 표시할 div
     var map;
     var geocoder = new kakao.maps.services.Geocoder();
     var center_locations=[];
     var return_locations=[];
+    var loginUser = [[ ${loginUser} ]];
+
+    console.log(loginUser);
 
     if (navigator.geolocation) {
 
@@ -148,24 +151,27 @@
                         infowindow.close();
                     });
 
-                    kakao.maps.event.addListener(marker, 'click', function() {
-                    var centername = location.name;
+
+                    if(loginUser==="admin"){
+                        kakao.maps.event.addListener(marker, 'click', function() {
+                        var centername = location.name;
 
 
-                       $.ajax({
-                            type: 'GET',
-                            url: '/marker-click',
-                            data: { centername : centername  },
-                            success: function (data) {
-                                $('#ajaxSection').html(data);
-                            },
-                            error: function (jqXHR, status, error) {
-                                alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                           $.ajax({
+                                type: 'GET',
+                                url: '/marker-click',
+                                data: { centername : centername  },
+                                success: function (data) {
+                                    $('#ajaxSection').html(data);
+                                },
+                                error: function (jqXHR, status, error) {
+                                    alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
 
-                            }
+                                }
 
+                            });
                         });
-                    });
+                    }
                 }
             });
         })(center_locations[i]);
