@@ -1,5 +1,5 @@
 
-function menu_click(ths){
+function menu_click(ths,id){
      let buttonValue = $(ths).text().trim();
      console.log(buttonValue, id);
 
