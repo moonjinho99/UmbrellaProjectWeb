@@ -3,7 +3,6 @@ package com.example.umbrella.controller;
 import com.example.umbrella.Service.MemberService;
 import com.example.umbrella.dto.CenterDto;
 import com.example.umbrella.dto.MemberDto;
-import com.example.umbrella.dto.UmbrellaDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.NoArgsConstructor;
@@ -16,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -59,6 +59,25 @@ public class MemberController {
         } else {
             return "fail";
         }
+    }
+
+    // 사용자 정보(앱)
+    @PostMapping(value = "/login-userInfo", produces = "application/json;charset=utf-8")
+    @ResponseBody
+    public List<MemberDto> getUserInfo(@RequestBody MemberDto memberDto) {
+
+        System.out.println("<<< 로그인(앱) - 사용자가 입력한 정보 >>>");
+        System.out.println("아이디 : " + memberDto.getId());
+        System.out.println("비밀번호 : " + memberDto.getPw());
+
+        MemberDto mvo = memberService.memberLogin(memberDto);
+
+        List<MemberDto> userInfo = new ArrayList<>();
+
+        userInfo.add(mvo);
+        System.out.println("mvo : " + mvo);
+
+        return userInfo;
     }
 
     // 아이디 중복확인(앱)
