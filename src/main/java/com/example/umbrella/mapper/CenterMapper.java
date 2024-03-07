@@ -14,4 +14,5 @@ public interface CenterMapper {
     public void updateMember(CenterDto center);
     public String findRegId(String centercode);
     public void deleteCenter(String regId);
+    public String getCentercodeById(String id);
 }

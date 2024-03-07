@@ -47,7 +47,7 @@ public class CenterController {
         }else if(buttonValue.equals("우산 관리")){
             result="/center/center_umbrella_manage";
         }else if(buttonValue.equals("보관함 등록")){
-            result="/center/center_storage_manage";
+            result="/center/center_storage_enroll";
         }else if(buttonValue.equals("보관함 관리")){
             result="/center/center_storage_manage";
         }else if(buttonValue.equals("반납함 등록")){
@@ -55,7 +55,7 @@ public class CenterController {
         }else if(buttonValue.equals("반납함 관리")){
             result="/center/center_returnbox_manage";
         }
-        model.addAttribute("page",result);
+
         return result;
     }
 

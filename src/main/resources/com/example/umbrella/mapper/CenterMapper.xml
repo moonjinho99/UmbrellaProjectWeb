@@ -21,5 +21,8 @@
     <delete id="deleteCenter" parameterType="String">
         DELETE FROM center WHERE regId = #{regId}
     </delete>
+    <select id="getCentercodeById" parameterType="String" resultType="String">
+        SELECT centercode FROM center WHERE regId = #{id}
+    </select>
 
 </mapper>

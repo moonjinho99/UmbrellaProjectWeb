@@ -18,4 +18,12 @@ public class ReturnBoxServiceImpl implements ReturnBoxService{
     public List<ReturnBoxDto> getAllReturnBox(){
        return returnBoxMapper.getAllReturnBox();
     }
+    @Override
+    public int countReturnBox(String centercode){return returnBoxMapper.countReturnBox(centercode);}
+    @Override
+    public void deleteReturnBox(String centercode){returnBoxMapper.deleteReturnBox(centercode);}
+    @Override
+    public List<String> getAllReturnBoxCode(String centercode){return returnBoxMapper.getAllReturnBoxCode(centercode);}
+    @Override
+    public void deleteReturnBoxDetail(String lockercode){returnBoxMapper.deleteReturnBoxDetail(lockercode);}
 }

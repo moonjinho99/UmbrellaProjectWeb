@@ -8,4 +8,8 @@ import java.util.List;
 @Mapper
 public interface ReturnBoxMapper {
     public List<ReturnBoxDto> getAllReturnBox();
+    public int countReturnBox(String centercode);
+    public void deleteReturnBox(String centercode);
+    public List<String> getAllReturnBoxCode(String centercode);
+    public void deleteReturnBoxDetail(String lockercode);
 }

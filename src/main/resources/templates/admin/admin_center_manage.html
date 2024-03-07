@@ -256,25 +256,27 @@
         $('.modal').css('display', 'none');
     }
 
+
+
     function deleteCenter(centercode) {
 
-    if (!confirm("삭제하시겠습니까?")) {
-        return false;
-    } else {
-        $.ajax({
-                type: 'POST',
-                url: '/delete-center',
-                data: { centercode: centercode },
-                success: function (data) {
-                    alert("삭제 완료되었습니다.");
-                    $('#ajaxSection').html(data);
-                },
-                error: function (jqXHR, status, error) {
-                    alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+            if (!confirm("삭제하시겠습니까?")) {
+                return false;
+            } else {
+                $.ajax({
+                        type: 'POST',
+                        url: '/delete-center',
+                        data: { centercode: centercode },
+                        success: function (data) {
+                            alert("삭제 완료되었습니다.");
+                            $('#ajaxSection').html(data);
+                        },
+                        error: function (jqXHR, status, error) {
+                            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
 
-                }
-            });
-    }
+                        }
+                    });
+            }
 
         }
 </script>

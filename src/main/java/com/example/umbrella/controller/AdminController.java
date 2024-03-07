@@ -35,6 +35,11 @@ public class AdminController {
     @Autowired
     ReturnBoxService returnBoxService;
 
+    @Autowired
+    LockerController lockerController;
+    @Autowired
+    ReturnBoxController returnBoxController;
+
     public PasswordEncoder passwordEncoding() {
         return new BCryptPasswordEncoder();
     }
@@ -115,13 +120,18 @@ public class AdminController {
     public String deleteCenter(@RequestParam("centercode") String centercode){
         System.out.println("deleteCenter 진입=================================>");
         int locker_count = lockerService.countLocker(centercode);
-        String regId="";
-        if(locker_count==0){
-            regId=centerService.findRegId(centercode);
-        }else{
-            lockerService.deleteLocker(centercode);
-            regId=centerService.findRegId(centercode);
+        int returnBox_count= returnBoxService.countReturnBox(centercode);
+        String regId=centerService.findRegId(centercode);;
+
+        if(locker_count>0&&returnBox_count==0){
+            lockerController.deleteLockerByCentercode(centercode);
+        }else if(locker_count==0&&returnBox_count>0){
+            returnBoxController.deleteLockerByCentercode(centercode);
+        }else if(locker_count>0&&returnBox_count>0){
+            lockerController.deleteLockerByCentercode(centercode);
+            returnBoxController.deleteLockerByCentercode(centercode);
         }
+
         centerService.deleteCenter(regId);
         memberService.deleteMember(regId);
         System.out.println("<=================================deleteCenter 완료");

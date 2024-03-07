@@ -11,4 +11,5 @@ public interface CenterService {
     public void updateCenterNotPw(CenterDto center);
     public String findRegId(String centercode);
     public void deleteCenter(String regId);
+    public String getCentercodeById(String id);
 }

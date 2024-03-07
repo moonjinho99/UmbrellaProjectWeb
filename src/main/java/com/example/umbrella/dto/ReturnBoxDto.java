@@ -2,11 +2,20 @@ package com.example.umbrella.dto;
 
 public class ReturnBoxDto {
 
+    String centercode;
     String returnBoxcode;
     String returnBoxAddr;
     int returnUmbrellaCnt;
     String returnBoxDetailcode;
     int umbrellacode;
+
+    public String getCentercode() {
+        return centercode;
+    }
+
+    public void setCentercode(String centercode) {
+        this.centercode = centercode;
+    }
 
     public String getReturnBoxcode() {
         return returnBoxcode;
@@ -51,7 +60,8 @@ public class ReturnBoxDto {
     @Override
     public String toString() {
         return "ReturnBoxDto{" +
-                "returnBoxcode='" + returnBoxcode + '\'' +
+                "centercode='" + centercode + '\'' +
+                ", returnBoxcode='" + returnBoxcode + '\'' +
                 ", returnBoxAddr='" + returnBoxAddr + '\'' +
                 ", returnUmbrellaCnt=" + returnUmbrellaCnt +
                 ", returnBoxDetailcode='" + returnBoxDetailcode + '\'' +

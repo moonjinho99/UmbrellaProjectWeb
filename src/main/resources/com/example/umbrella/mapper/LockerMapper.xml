@@ -6,10 +6,41 @@
     <select id="getlocker" resultType="com.example.umbrella.dto.LockerDto">
         select * from locker
     </select>
-    <select id="countLocker" parameterType="String">
+    <select id="countLocker" parameterType="String" resultType="int">
         SELECT count(*) FROM locker WHERE centercode = #{centercode}
     </select>
-    <delete id="deleteLocker" parameterType="String">
+    <select id="getAllLockerCode" parameterType="String" resultType="String">
+        SELECT lockercode FROM locker WHERE centercode = #{centercode}
+    </select>
+    <delete id="deleteLockerDetailByLocalcode" parameterType="String">
+        DELETE FROM lockerDetail WHERE lockercode = #{lockercode}
+    </delete>
+    <delete id="deleteLockerByCentercode" parameterType="String">
         DELETE FROM locker WHERE centercode = #{centercode}
     </delete>
+    <insert id="insertLocker" parameterType="String">
+        INSERT INTO locker values(#{lockercode}, #{centercode}, #{lockerAddr})
+    </insert>
+    <insert id="insertLockerDetail" parameterType="com.example.umbrella.dto.LockerDto">
+        INSERT INTO lockerDetail(lockerdetailcode, lockercode, lockerStatus, lockerPw) values(#{lockerDetailcode}, #{lockercode}, 0, #{lockerPw})
+    </insert>
+    <select id="getAllLockerByCentercode" parameterType="String" resultType="com.example.umbrella.dto.LockerDto">
+        SELECT * FROM locker WHERE centercode = #{centercode}
+    </select>
+    <delete id="deleteLockerByLockercode" parameterType="String">
+        DELETE FROM locker WHERE lockercode = #{lockercode}
+    </delete>
+    <select id="getLocker" parameterType="String" resultType="com.example.umbrella.dto.LockerDto">
+        SELECT * FROM locker WHERE lockercode = #{lockercode}
+    </select>
+    <update id="updateLockerAddr" parameterType="com.example.umbrella.dto.LockerDto">
+        UPDATE locker SET lockerAddr = #{lockerAddr} WHERE lockercode = #{lockercode}
+    </update>
+    <select id="getAllLockerDetailByLockercode" parameterType="String" resultType="com.example.umbrella.dto.LockerDto">
+        SELECT * FROM lockerDetail WHERE lockercode = #{lockercode}
+    </select>
+    <delete id="deleteLockerDetailByLockerDetailcode" parameterType="String">
+        DELETE FROM lockerDetail WHERE lockerDetailcode = #{lockerDetailcode}
+    </delete>
+
 </mapper>

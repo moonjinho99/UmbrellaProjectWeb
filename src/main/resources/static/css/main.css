@@ -117,3 +117,11 @@
           transform: translateX(-50%) translateY(-50%);
         }
 
+        .lockercode:hover{
+          font-weight: bold;
+        }
+
+        .umbrellacode: hover{
+          font-weight: bold;
+        }
+

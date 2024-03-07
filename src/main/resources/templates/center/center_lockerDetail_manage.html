@@ -2,14 +2,16 @@
 <head>
     <meta charset="UTF-8">
     <title>UmbrellaMain</title>
-   </head>
+</head>
 <div style="width: 83%; height: 90vh; position: relative;">
-    <table id="lockerListTable" class="table table-bordered">
+    <input type="button" value="이전" onclick="">
+    <table id="lockerDetailListTable" class="table table-bordered">
         <thead>
         <tr>
-            <th>LOCKERCODE</th>
-            <th>보관함 주소</th>
-            <th>주소 수정</th>
+            <th>LOCKDECODE</th>
+            <th>보관여부</th>
+            <th>비밀번호</th>
+            <th>수정</th>
             <th>삭제</th>
         </tr>
         </thead>
@@ -18,37 +20,45 @@
 </div>
 <script th:inline="javascript">
     $(document).ready(function () {
-        var table = $("#lockerListTable").DataTable();
+        var table = $("#lockerDetailListTable").DataTable();
         table.destroy();
 
+        var lockercode = [[ ${lockercode} ]]
+        console.log(lockercode);
+
         $.ajax({
-            url: "/getLockerList",
+            url: "/getLockerDetailList",
             type: "POST",
-            data: "id=aa",
+            data: {lockercode: lockercode},
             success: function (data) {
-                var dataTable = $("#lockerListTable").DataTable({
+                var dataTable = $("#lockerDetailListTable").DataTable({
                     data: data,
                     columns: [
+                        { data: 'lockerDetailcode' },
                         {
-                            title: 'lockercode',
-                            data: 'lockercode',
-                            render: function (data) {
-                                return '<a class="lockercode" onclick="goLockerDetailGET(\'' + data + '\')">'+data+'</a>'
+                            title: "보관여부",
+                            data: data,
+                            render: function (data,type, row) {
+                                if (row.lockerStatus == 1) {
+                                    return '<a class="umbrellacode" onclick="goUmbrellaGET(\'' + row.umbrellacode + '\')">보관: ' + row.umbrellacode + '</a>';
+                                } else {
+                                    return '<a>미보관</a>';
+                                }
                             }
                         },
-                        { data: 'lockerAddr' },
+                        { data: 'lockerPw' },
                         {
-                            title: "주소 수정",
-                            data: 'lockercode',
+                            title: "수정",
+                            data: 'lockerDetailcode',
                             render: function (data) {
-                                return '<button onclick="updateLockerHTML(\'' + data + '\')">수정</button>'
+                                return '<button onclick="updateLockerDetailHTML(\'' + data + '\')">수정</button>'
                             }
                         },
                         {
                             title: "삭제",
-                            data: 'lockercode',
+                            data: 'lockerDetailcode',
                             render: function (data) {
-                                return '<button onclick="deleteLocker(\'' + data + '\')">삭제</button>'
+                                return '<button onclick="deleteLockerDetail(\'' + data+ '\', \'' +lockercode + '\')">삭제</button>'
                             }
                         }
                     ]
@@ -64,7 +74,7 @@
     });
 
 
-    function updateLockerHTML(lockercode) {
+    function updateLockerDetailHTML(lockercode) {
             $.ajax({
                 type: 'POST',
                 url: '/update-locker-html',
@@ -77,7 +87,7 @@
                     <div><label>보관함 CODE</label><input name="lockercode" type="text" value="${data.lockercode}" disabled></div>
                     <div><label>보관함 주소</label><input name="beforeAddr" type="text" value="${data.lockerAddr}" disabled><input type="button" value="주소변경" onclick="showPost()"></div>
                     <div class="daum_post"></div>
-                    <div><input type="button" value="수정" onclick="updateLockerPOST()">
+                    <div><input type="button" value="수정" onclick="updateLockerDetailPOST()">
                     <input type="button" value="취소" onclick="updateCancle()"</div>
                     `);
                     $('.modal').css('display', 'block');
@@ -142,7 +152,7 @@
     }
 
 
-    function updateLockerPOST() {
+    function updateLockerDetailPOST() {
 
         var lockercode = $('input[name=lockercode]').val();
         var beforeAddr = $('input[name=beforeAddr]').val();
@@ -209,15 +219,15 @@
 
 
 
-    function deleteLocker(lockercode) {
-
+    function deleteLockerDetail(lockerDetailcode,lockercode) {
+            console.log(lockerDetailcode,lockercode);
             if (!confirm("삭제하시겠습니까?")) {
                 return false;
             } else {
                 $.ajax({
                         type: 'POST',
-                        url: '/delete_locker_by_lockercode',
-                        data: { lockercode: lockercode },
+                        url: '/delete_lockerDetail',
+                        data: { lockerDetailcode: lockerDetailcode, lockercode: lockercode },
                         success: function (data) {
                             alert("삭제 완료되었습니다.");
                             $('#ajaxSection').html(data);
@@ -231,11 +241,11 @@
 
     }
 
-    function goLockerDetailGET(lockercode){
+    function goUmbrellaGET(umbrellacode){
            $.ajax({
                         type: 'GET',
-                        url: '/go_lockerDetail',
-                        data: { lockercode: lockercode },
+                        url: '/go_umbrella',
+                        data: { umbrellacode: umbrellacode },
                         success: function (data) {
                             $('#ajaxSection').html(data);
                         },

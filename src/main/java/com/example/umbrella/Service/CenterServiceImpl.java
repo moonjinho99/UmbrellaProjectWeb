@@ -23,5 +23,6 @@ public class CenterServiceImpl implements CenterService{
     public void updateCenterNotPw(CenterDto center){centerMapper.updateCenterNotPw(center);}
     public String findRegId(String centercode){return centerMapper.findRegId(centercode);}
     public void deleteCenter(String regId){centerMapper.deleteCenter(regId); }
+    public String getCentercodeById(String id){ return centerMapper.getCentercodeById(id);}
 
 }

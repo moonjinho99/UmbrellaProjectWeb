@@ -5,7 +5,19 @@
 <mapper namespace="com.example.umbrella.mapper.ReturnBoxMapper">
 
     <select id="getAllReturnBox" resultType="com.example.umbrella.dto.ReturnBoxDto">
-       select * from returnBox
+       select * from ReturnBox
     </select>
+    <select id="countReturnBox" parameterType="String" resultType="int">
+        SELECT count(*) FROM returnBox WHERE centercode = #{centercode}
+    </select>
+    <select id="getAllReturnBoxCode" parameterType="String" resultType="String">
+        SELECT returnBoxCode FROM returnBox WHERE centercode = #{centercode}
+    </select>
+    <delete id="deleteReturnBoxDetail" parameterType="String">
+        DELETE FROM reuturnBoxDetail WHERE returnBoxCode = #{returnBoxCode}
+    </delete>
+    <delete id="deleteReturnBox" parameterType="String">
+        DELETE FROM returnBox WHERE centercode = #{centercode}
+    </delete>
 
 </mapper>
