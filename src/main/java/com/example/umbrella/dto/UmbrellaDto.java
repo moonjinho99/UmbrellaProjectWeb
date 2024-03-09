@@ -1,6 +1,10 @@
 package com.example.umbrella.dto;
 
+import org.apache.ibatis.type.Alias;
+
 import java.util.Date;
+
+
 
 public class UmbrellaDto {
 

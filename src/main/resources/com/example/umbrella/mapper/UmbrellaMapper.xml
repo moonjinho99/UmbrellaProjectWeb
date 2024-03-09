@@ -8,4 +8,12 @@
         select u.umbrellacode,price,rentalId,photo,rentalStatus,rentalTime,returnTime from umbrella u join lockerdetail l on u.umbrellacode = l.umbrellacode where l.lockercode = #{lockercode}
     </select>
 
+    <update id="rentalUmbrella" parameterType="hashMap">
+        update umbrella set rentalId = #{rentalId}, rentalStatus = #{rentalStatus}, rentalTime = #{rentalTime}, returnTime = #{returnTime} where umbrellacode=#{umbrella_code}
+    </update>
+
+    <select id="getMyRentalUmbList" parameterType="hashMap" resultType="com.example.umbrella.dto.UmbrellaDto">
+        select * from umbrella where rentalId = #{rentalId} and rentalStatus = #{rentalStatus};
+    </select>
+
 </mapper>

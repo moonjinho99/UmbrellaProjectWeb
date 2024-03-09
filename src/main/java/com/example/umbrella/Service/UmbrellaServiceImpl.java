@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 
 @RequiredArgsConstructor
@@ -18,5 +19,15 @@ public class UmbrellaServiceImpl implements UmbrellaService{
     @Override
     public List<UmbrellaDto> getUmbrellaList(String lockercode) {
         return umbrellaMapper.getUmbrellaList(lockercode);
+    }
+
+    @Override
+    public void rentalUmbrella(Map<String, Object> rentalUmbMap) {
+        umbrellaMapper.rentalUmbrella(rentalUmbMap);
+    }
+
+    @Override
+    public List<UmbrellaDto> getMyRentalUmbList(Map<String, Object> myRentalUmbMap) {
+        return umbrellaMapper.getMyRentalUmbList(myRentalUmbMap);
     }
 }
