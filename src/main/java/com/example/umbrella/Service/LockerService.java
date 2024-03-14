@@ -18,5 +18,11 @@ public interface LockerService {
     public void updateLockerAddr(LockerDto locker);
     public List<LockerDto> getAllLockerDetailByLockercode(String lockercode);
     public void deleteLockerDetailByLockerDetailcode(String lockerDetailcode);
+    public LockerDto getLockerDetailByLockerDetailcode(String lockerDetailcode);
+    public void updateLockerDetailByLockerDetailcode(LockerDto lockerDetail) throws NullPointerException;
+    public int checkUmbrellacodeUsed(Integer umbrellacode);
+    public String maxLockercode(String centercode);
+
+
 
 }

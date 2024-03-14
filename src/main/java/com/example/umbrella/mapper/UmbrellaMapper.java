@@ -10,6 +10,7 @@ import java.util.Map;
 public interface UmbrellaMapper {
 
     public List<UmbrellaDto> getUmbrellaList(String lockercode);
+    public int countUmbrella(int umbrellacode);
 
     //우산 대여
     public void rentalUmbrella(Map<String,Object> rentalUmbMap);

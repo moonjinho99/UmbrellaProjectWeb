@@ -42,5 +42,17 @@
     <delete id="deleteLockerDetailByLockerDetailcode" parameterType="String">
         DELETE FROM lockerDetail WHERE lockerDetailcode = #{lockerDetailcode}
     </delete>
+    <select id="getLockerDetailByLockerDetailcode" parameterType="String" resultType="com.example.umbrella.dto.LockerDto">
+        SELECT * FROM lockerDetail WHERE lockerDetailcode = #{lockerDetailcode}
+    </select>
+    <update id="updateLockerDetailByLockerDetailcode" parameterType="com.example.umbrella.dto.LockerDto">
+        UPDATE lockerDetail SET umbrellacode = #{umbrellacode}, lockerStatus = #{lockerStatus},  lockerPw = #{lockerPw} WHERE lockerDetailcode = #{lockerDetailcode}
+    </update>
+    <select id="checkUmbrellacodeUsed" parameterType="Integer" resultType="int">
+        SELECT count(*) FROM lockerDetail WHERE umbrellacode = #{umbrellacode}
+    </select>
+    <select id="maxLockercode" parameterType="String" resultType="String">
+        SELECT max(lockercode) FROM locker WHERE centercode = #{centercode}
+    </select>
 
 </mapper>

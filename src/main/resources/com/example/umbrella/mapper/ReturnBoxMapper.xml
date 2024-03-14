@@ -19,5 +19,15 @@
     <delete id="deleteReturnBox" parameterType="String">
         DELETE FROM returnBox WHERE centercode = #{centercode}
     </delete>
+    <select id="maxReturnBoxcode" parameterType="String" resultType="String">
+        SELECT max(returnBoxcode) FROM returnBox WHERE centercode = #{centercode}
+    </select>
+    <insert id="insertReturnBox" parameterType="String">
+        INSERT INTO returnBox values(#{returnBoxcode}, #{returnBoxAddr}, 0, #{centercode})
+    </insert>
+    <insert id="insertReturnBoxDetail" parameterType="com.example.umbrella.dto.ReturnBoxDto">
+        INSERT INTO returnBoxDetail(returnBoxDetailcode,returnBoxcode) values(#{returnBoxDetailcode}, #{returnBoxcode})
+    </insert>
+
 
 </mapper>

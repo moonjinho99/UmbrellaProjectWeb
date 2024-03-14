@@ -2,9 +2,11 @@ package com.example.umbrella.controller;
 
 import com.example.umbrella.Service.CenterService;
 import com.example.umbrella.Service.LockerService;
+import com.example.umbrella.Service.UmbrellaService;
 import com.example.umbrella.dto.LockerDto;
 import com.example.umbrella.dto.MemberDto;
 import com.example.umbrella.dto.UmbrellaDto;
+import jakarta.annotation.Nullable;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +32,8 @@ public class LockerController {
     LockerService lockerService;
     @Autowired
     CenterService centerService;
+    @Autowired
+    UmbrellaService umbrellaService;
 
     //앱의 지도에 보관함 표시
     @GetMapping(value="/get_locker", produces = "application/json;charset=utf-8")
@@ -56,8 +60,22 @@ public class LockerController {
         String centercode = centerService.getCentercodeById(id);
 
         //lockercode 생성
-        int locker_count = lockerService.countLocker(centercode);
-        String lockercode = decideLockercode(locker_count);
+        int locker_count = lockerService.countLocker(centercode)+1;
+        @Nullable String maxLockercode = lockerService.maxLockercode(centercode);
+        String lockercode = "";
+        if(locker_count<=9){
+            lockercode = "lock"+"0"+locker_count;
+            if(lockercode.equals(maxLockercode)){
+                locker_count++;
+                lockercode = "lock"+locker_count;
+            }
+        }else{
+            lockercode = "lock"+locker_count;
+            if(lockercode.equals(maxLockercode)){
+                locker_count++;
+                lockercode = "lock"+locker_count;
+            }
+        }
         locker.setLockercode(lockercode);
 
 
@@ -65,7 +83,7 @@ public class LockerController {
         lockerService.insertLocker(lockercode,centercode,lockerAddr);
 
         for(int i=1;i<=lockerDetail_number;i++){
-            String lockerDetailCode = lockercode;
+            String lockerDetailCode = lockercode+"_";
             if(i<=9){
                 String n = "0"+i;
                 lockerDetailCode +=n;;
@@ -100,42 +118,6 @@ public class LockerController {
 
         System.out.println("============================================insertLockerById 완료");
         return "/center/center_storage_manage";
-    }
-
-    public String decideLockercode(int locker_count){
-        System.out.println("============================================decideLockercode 진입");
-        List<String> lockerCode_Alphabet = new ArrayList<>();
-        lockerCode_Alphabet.add("A");
-        lockerCode_Alphabet.add("B");
-        lockerCode_Alphabet.add("C");
-        lockerCode_Alphabet.add("D");
-        lockerCode_Alphabet.add("E");
-        lockerCode_Alphabet.add("F");
-        lockerCode_Alphabet.add("G");
-        lockerCode_Alphabet.add("H");
-        lockerCode_Alphabet.add("I");
-        lockerCode_Alphabet.add("J");
-        lockerCode_Alphabet.add("K");
-        lockerCode_Alphabet.add("L");
-        lockerCode_Alphabet.add("M");
-        lockerCode_Alphabet.add("N");
-        lockerCode_Alphabet.add("O");
-        lockerCode_Alphabet.add("P");
-        lockerCode_Alphabet.add("Q");
-        lockerCode_Alphabet.add("R");
-        lockerCode_Alphabet.add("S");
-        lockerCode_Alphabet.add("T");
-        lockerCode_Alphabet.add("U");
-        lockerCode_Alphabet.add("V");
-        lockerCode_Alphabet.add("W");
-        lockerCode_Alphabet.add("X");
-        lockerCode_Alphabet.add("Y");
-        lockerCode_Alphabet.add("Z");
-
-        String lockercode = "lock" + lockerCode_Alphabet.get(locker_count);
-        log.debug(lockercode);
-        System.out.println("============================================decideLockercode 완료");
-        return lockercode;
     }
 
     @ResponseBody
@@ -242,4 +224,69 @@ public class LockerController {
         return "center/center_umbrella_manage";
     }
 
+    @GetMapping(value = "/go_locker")
+    public String goLockerGET(){
+        return "center/center_storage_manage";
+    }
+
+    @ResponseBody
+    @PostMapping(value = "/update-lockerDetail-html")
+    public LockerDto updateLockerDetailHTML(@RequestParam("lockerDetailcode")String lockerDetailcode){
+        System.out.println("============================================updateLockerDetailHTML 진입");
+        LockerDto lockerDetail = new LockerDto();
+        lockerDetail = lockerService.getLockerDetailByLockerDetailcode(lockerDetailcode);
+        log.debug(lockerDetail.toString());
+        System.out.println("============================================updateLockerDetailHTML 완료");
+        return lockerDetail;
+    }
+
+
+    @PostMapping(value = "/update-lockerDetail-post")
+    public String updateLockerDetail(@RequestParam("lockercode")String lockercode, @RequestParam("lockerDetailcode")String lockerDetailcode,
+                                     @RequestParam("lockerStatus")int lockerStatus, @RequestParam("umbrellacode") @Nullable Integer umbrellacode, @RequestParam("lockerPw")String lockerPw, Model model) throws NullPointerException{
+        System.out.println("============================================updateLockerDetail 진입");
+
+        LockerDto lockerDetail = new LockerDto();
+        lockerDetail.setLockerStatus(lockerStatus);
+        lockerDetail.setLockerDetailcode(lockerDetailcode);
+        lockerDetail.setLockerPw(lockerPw);
+        if(lockerStatus==0){
+            umbrellacode = null;
+            lockerDetail.setUmbrellacode(umbrellacode);
+            lockerService.updateLockerDetailByLockerDetailcode(lockerDetail);
+            model.addAttribute("lockercode",lockercode);
+
+        }else if(lockerStatus==1){
+            lockerDetail.setUmbrellacode(umbrellacode);
+            lockerService.updateLockerDetailByLockerDetailcode(lockerDetail);
+            model.addAttribute("lockercode",lockercode);
+
+        }
+
+
+        System.out.println("============================================updateLockerDetail 완료");
+
+        return "center/center_lockerDetail_manage";
+    }
+
+    @ResponseBody
+    @PostMapping("/countUmbrellacodeisUsedTo")
+    public String countUmbrellacodeisUsedTo(int umbrellacode){
+        System.out.println("============================================countUmbrellacodeisUsedTo 진입");
+        int countUmbrellacodeisUsedTo;
+        String result = "";
+        countUmbrellacodeisUsedTo = lockerService.checkUmbrellacodeUsed(umbrellacode);
+        int countUmbrella = umbrellaService.countUmbrella(umbrellacode);
+
+        if(countUmbrellacodeisUsedTo>=1&&countUmbrella==1){
+            result = "isUsedTo";
+        }else if(countUmbrellacodeisUsedTo==0&&countUmbrella==1){
+            result = "isNotUsedTo";
+        }else if(countUmbrella==0){
+            result = "noUmbrella";
+        }
+        log.debug(result);
+        System.out.println("============================================countUmbrellacodeisUsedTo 완료");
+        return result;
+    }
 }

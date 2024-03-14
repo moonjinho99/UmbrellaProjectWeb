@@ -12,4 +12,7 @@ public interface UmbrellaService {
     public void rentalUmbrella(Map<String,Object> rentalUmbMap);
 
     public List<UmbrellaDto> getMyRentalUmbList(Map<String,Object> myRentalUmbMap);
+
+    public int countUmbrella(int umbrellacode);
+
 }

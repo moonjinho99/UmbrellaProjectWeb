@@ -1,12 +1,15 @@
 package com.example.umbrella.dto;
 
+import jakarta.annotation.Nullable;
+
 public class LockerDto {
 
     String lockercode;
     String centercode;
     String lockerAddr;
     String lockerDetailcode;
-    int umbrellacode;
+    @Nullable
+    Integer umbrellacode;
     int lockerStatus;
     String lockerPw;
 
@@ -42,11 +45,11 @@ public class LockerDto {
         this.lockerDetailcode = lockerDetailcode;
     }
 
-    public int getUmbrellacode() {
+    public Integer getUmbrellacode() {
         return umbrellacode;
     }
 
-    public void setUmbrellacode(int umbrellacode) {
+    public void setUmbrellacode(Integer umbrellacode) {
         this.umbrellacode = umbrellacode;
     }
 

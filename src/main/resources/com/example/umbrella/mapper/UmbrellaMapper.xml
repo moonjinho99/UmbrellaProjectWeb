@@ -7,6 +7,9 @@
     <select id="getUmbrellaList" resultType="com.example.umbrella.dto.UmbrellaDto">
         select u.umbrellacode,price,rentalId,photo,rentalStatus,rentalTime,returnTime from umbrella u join lockerdetail l on u.umbrellacode = l.umbrellacode where l.lockercode = #{lockercode}
     </select>
+    <select id="countUmbrella" parameterType="int" resultType="int">
+        SELECT count(*) FROM umbrella WHERE umbrellacode = #{umbrellacode}
+    </select>
 
     <update id="rentalUmbrella" parameterType="hashMap">
         update umbrella set rentalId = #{rentalId}, rentalStatus = #{rentalStatus}, rentalTime = #{rentalTime}, returnTime = #{returnTime} where umbrellacode=#{umbrella_code}

@@ -1,1 +1,263 @@
-우산 관리
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>UmbrellaMain</title>
+</head>
+<div style="width: 83%; height: 90vh; position: relative;">
+    <input type="button" value="이전" onclick="goLocker()">
+    <table id="umbrellaListTable" class="table table-bordered">
+        <thead>
+        <tr>
+            <th>CODE</th>
+            <th>사진</th>
+            <th>대여상태</th>
+            <th>대여자</th>
+            <th>가격</th>
+            <th>대여시간</th>
+            <th>반납시간</th>
+            <th>수정</th>
+            <th>삭제</th>
+        </tr>
+        </thead>
+    </table>
+    <div class="modal"><div id="update_modal"></div></div>
+</div>
+<script th:inline="javascript">
+    $(document).ready(function () {
+        var table = $("#umbrellaListTable").DataTable();
+        table.destroy();
+
+        var umbrellacode = [[ ${umbrellacode} ]];
+
+
+        $.ajax({
+            url: "/getUmbrellaList",
+            type: "POST",
+            data: "id=aa",
+            success: function (data) {
+                var dataTable = $("#umbrellaListTable").DataTable({
+                    data: data,
+                    columns: [
+                        { data: 'umbrellacode' },
+                        { data: '' },
+                        { data: 'name' },
+                        { data: 'phone' },
+                        { data: 'centerAddr' },
+                        {
+                            title: "수정",
+                            data: 'centercode',
+                            render: function (data) {
+                                return '<button onclick="updateCenterHTML(\'' + data + '\')">수정</button>'
+                            }
+                        },
+                        {
+                            title: "삭제",
+                            data: 'centercode',
+                            render: function (data) {
+                                return '<button onclick="deleteCenter(\'' + data + '\')">삭제</button>'
+                            }
+                        }
+                    ]
+                });
+
+                if(umbrellacode!==null){
+                dataTable.column(1).search(umbrellacode).draw();
+                document.querySelector('input[type="search"]').value = umbrellacode;
+                }
+            },
+            error: function (request, status, error) {
+                console.log("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+            }
+
+
+
+        });
+    });
+
+
+    function updateLockerDetailHTML(lockerDetailcode, lockercode) {
+            var lockercode = lockercode;
+            $.ajax({
+                type: 'POST',
+                url: '/update-lockerDetail-html',
+                data: { lockerDetailcode: lockerDetailcode },
+                success: function (data) {
+
+                    //모달 부분 html
+
+                    var updateHtml = "<div><label>LockerDetailCode</label><input name='lockerDetailcode' type='text' value='" + data.lockerDetailcode + "' disabled></div>";
+
+                    if(data.lockerStatus == 1){
+                        updateHtml += "<input type='radio' name='lockerStatus' value='1' checked/>보관";
+                        updateHtml += "<input type='radio' name='lockerStatus' value='0' />미보관";
+                        updateHtml += "<div class='umbrellacode_show'><label>우산코드</label><input type='text' name='umbrellacode' value='" + data.umbrellacode + "'></div>";
+
+                    } else {
+                        updateHtml += "<input type='radio' name='lockerStatus' value='1' />보관";
+                        updateHtml += "<input type='radio' name='lockerStatus' value='0' checked/>미보관";
+                        updateHtml += "<div class='umbrellacode_show' style='display:none;'><label>우산코드</label><input type='text' name='umbrellacode'></div>";
+
+                    }
+
+                    updateHtml += "<div><label>비밀번호</label><input name='lockerPw' type='text' value='" + data.lockerPw + "' placeholder='수정할 비밀번호 입력'></div>";
+                    updateHtml += "<input type='hidden' name='lockercode' value='"+lockercode+"'>";
+                    updateHtml += "<div><input type='button' value='수정' onclick='updateLockerDetailPOST()'>";
+                    updateHtml += "<input type='button' value='취소' onclick='updateCancle()'></div>";
+
+
+                    $('#update_modal').html(updateHtml);
+                    $('.modal').css('display', 'block');
+
+                    $(function (){
+
+                    $('input[type="radio"][name="lockerStatus"]').on('click', function(){
+                      var chkValue = $('input[type=radio][name="lockerStatus"]:checked').val();
+                      if(chkValue==0){
+                                 $('.umbrellacode_show').css('display','none');
+                      }else{
+                                 $('.umbrellacode_show').css('display','block');
+                      }
+
+                    });
+
+                    });
+
+                },
+                error: function (xhr, status, error) {
+                    console.error("에러 발생:", error);
+                }
+            });
+        }
+
+
+    function updateLockerDetailPOST() {
+
+        var lockercode = $('input[name=lockercode]').val();
+        var lockerDetailcode = $('input[name=lockerDetailcode]').val();
+        var lockerStatus = $('input[type=radio][name=lockerStatus]:checked').val();
+        var umbrellacode = $('input[name=umbrellacode]').val();
+        var lockerPw = $('input[name=lockerPw]').val();
+
+
+        //유효성 검사
+        var pwCheck = false;
+
+            if(lockerPw===undefined||lockerPw===null||lockerPw==""){
+                alert("비밀번호는 필수입니다.");
+                return false;
+            }else{
+                pwCheck = true;
+            }
+
+            if(lockerStatus==1&&(umbrellacode === null||umbrellacode == "")){
+                console.log("a");
+                alert("보관시 우산코드는 필수입니다.");
+                return false;
+            }else if(lockerStatus==1&&umbrellacode!==null){
+                 console.log("b");
+                $.ajax({
+                    type: 'POST',
+                    url: '/countUmbrellacodeisUsedTo',
+                    data: { umbrellacode: umbrellacode },
+                    success: function (data) {
+                    console.log(data);
+                           if(data=="isUsedTo"){
+                                alert("이미 사용중인 우산코드입니다.");
+                           }else if(data=="isNotUsedTo"){
+                                umbrellaUsedCheck = true;
+                                if(pwCheck){
+                                    updateActionAjax(lockercode,lockerDetailcode,lockerStatus,umbrellacode,lockerPw);
+                                }
+
+                           }else if(data=="noUmbrella"){
+                                alert("등록되지 않은 우산코드입니다.");
+                           }
+                    }
+
+                });
+            }else if(lockerStatus==0){
+             console.log("c");
+                umbrellacode = null;
+                if(pwCheck){
+                    updateActionAjax(lockercode,lockerDetailcode,lockerStatus,umbrellacode,lockerPw);
+                }
+            }
+
+    }
+
+    function updateActionAjax(lockercode,lockerDetailcode,lockerStatus,umbrellacode,lockerPw){
+        $.ajax({
+            type: 'POST',
+            url: '/update-lockerDetail-post',
+            async: false,
+            data: { lockercode: lockercode, lockerDetailcode: lockerDetailcode, lockerStatus: lockerStatus, umbrellacode: umbrellacode, lockerPw: lockerPw },
+            success: function (data) {
+                alert("수정 완료되었습니다.");
+                $('#ajaxSection').html(data);
+            }
+        });
+    }
+
+
+
+
+    function updateCancle(){
+        $('.modal').css('display', 'none');
+    }
+
+
+
+    function deleteLockerDetail(lockerDetailcode,lockercode) {
+            console.log(lockerDetailcode,lockercode);
+            if (!confirm("삭제하시겠습니까?")) {
+                return false;
+            } else {
+                $.ajax({
+                        type: 'POST',
+                        url: '/delete_lockerDetail',
+                        data: { lockerDetailcode: lockerDetailcode, lockercode: lockercode },
+                        success: function (data) {
+                            alert("삭제 완료되었습니다.");
+                            $('#ajaxSection').html(data);
+                        },
+                        error: function (jqXHR, status, error) {
+                            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+
+                        }
+                    });
+            }
+
+    }
+
+    function goUmbrellaGET(umbrellacode){
+           $.ajax({
+                        type: 'GET',
+                        url: '/go_umbrella',
+                        data: { umbrellacode: umbrellacode },
+                        success: function (data) {
+                            $('#ajaxSection').html(data);
+                        },
+                        error: function (jqXHR, status, error) {
+                            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+
+                        }
+           });
+    }
+
+    function goLocker(){
+        $.ajax({
+                        type: 'GET',
+                        url: '/go_locker',
+                        data : "id=aa",
+                        success: function (data) {
+                            $('#ajaxSection').html(data);
+                        },
+                        error: function (jqXHR, status, error) {
+                            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+
+                        }
+           });
+    }
+</script>
+</html>
+

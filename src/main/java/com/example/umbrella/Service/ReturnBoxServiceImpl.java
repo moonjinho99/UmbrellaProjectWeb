@@ -26,4 +26,11 @@ public class ReturnBoxServiceImpl implements ReturnBoxService{
     public List<String> getAllReturnBoxCode(String centercode){return returnBoxMapper.getAllReturnBoxCode(centercode);}
     @Override
     public void deleteReturnBoxDetail(String lockercode){returnBoxMapper.deleteReturnBoxDetail(lockercode);}
+    @Override
+    public String maxReturnBoxcode(String centercode){return returnBoxMapper.maxReturnBoxcode(centercode);}
+    @Override
+    public void insertReturnBox(String returnBoxcode, String returnBoxAddr, String centercode){returnBoxMapper.insertReturnBox(returnBoxcode,returnBoxAddr,centercode);}
+    @Override
+    public void insertReturnBoxDetail(ReturnBoxDto returnBox){returnBoxMapper.insertReturnBoxDetail(returnBox);}
+
 }

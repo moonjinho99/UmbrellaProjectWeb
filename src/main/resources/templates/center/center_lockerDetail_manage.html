@@ -4,11 +4,11 @@
     <title>UmbrellaMain</title>
 </head>
 <div style="width: 83%; height: 90vh; position: relative;">
-    <input type="button" value="이전" onclick="">
+    <input type="button" value="이전" onclick="goLocker()">
     <table id="lockerDetailListTable" class="table table-bordered">
         <thead>
         <tr>
-            <th>LOCKDECODE</th>
+            <th>CODE</th>
             <th>보관여부</th>
             <th>비밀번호</th>
             <th>수정</th>
@@ -51,7 +51,7 @@
                             title: "수정",
                             data: 'lockerDetailcode',
                             render: function (data) {
-                                return '<button onclick="updateLockerDetailHTML(\'' + data + '\')">수정</button>'
+                                return '<button onclick="updateLockerDetailHTML(\'' + data +'\', \'' +lockercode + '\')">수정</button>'
                             }
                         },
                         {
@@ -74,23 +74,52 @@
     });
 
 
-    function updateLockerDetailHTML(lockercode) {
+    function updateLockerDetailHTML(lockerDetailcode, lockercode) {
+            var lockercode = lockercode;
             $.ajax({
                 type: 'POST',
-                url: '/update-locker-html',
-                data: { lockercode: lockercode },
+                url: '/update-lockerDetail-html',
+                data: { lockerDetailcode: lockerDetailcode },
                 success: function (data) {
 
                     //모달 부분 html
 
-                    $('#update_modal').html(`
-                    <div><label>보관함 CODE</label><input name="lockercode" type="text" value="${data.lockercode}" disabled></div>
-                    <div><label>보관함 주소</label><input name="beforeAddr" type="text" value="${data.lockerAddr}" disabled><input type="button" value="주소변경" onclick="showPost()"></div>
-                    <div class="daum_post"></div>
-                    <div><input type="button" value="수정" onclick="updateLockerDetailPOST()">
-                    <input type="button" value="취소" onclick="updateCancle()"</div>
-                    `);
+                    var updateHtml = "<div><label>LockerDetailCode</label><input name='lockerDetailcode' type='text' value='" + data.lockerDetailcode + "' disabled></div>";
+
+                    if(data.lockerStatus == 1){
+                        updateHtml += "<input type='radio' name='lockerStatus' value='1' checked/>보관";
+                        updateHtml += "<input type='radio' name='lockerStatus' value='0' />미보관";
+                        updateHtml += "<div class='umbrellacode_show'><label>우산코드</label><input type='text' name='umbrellacode' value='" + data.umbrellacode + "'></div>";
+
+                    } else {
+                        updateHtml += "<input type='radio' name='lockerStatus' value='1' />보관";
+                        updateHtml += "<input type='radio' name='lockerStatus' value='0' checked/>미보관";
+                        updateHtml += "<div class='umbrellacode_show' style='display:none;'><label>우산코드</label><input type='text' name='umbrellacode'></div>";
+
+                    }
+
+                    updateHtml += "<div><label>비밀번호</label><input name='lockerPw' type='text' value='" + data.lockerPw + "' placeholder='수정할 비밀번호 입력'></div>";
+                    updateHtml += "<input type='hidden' name='lockercode' value='"+lockercode+"'>";
+                    updateHtml += "<div><input type='button' value='수정' onclick='updateLockerDetailPOST()'>";
+                    updateHtml += "<input type='button' value='취소' onclick='updateCancle()'></div>";
+
+
+                    $('#update_modal').html(updateHtml);
                     $('.modal').css('display', 'block');
+
+                    $(function (){
+
+                    $('input[type="radio"][name="lockerStatus"]').on('click', function(){
+                      var chkValue = $('input[type=radio][name="lockerStatus"]:checked').val();
+                      if(chkValue==0){
+                                 $('.umbrellacode_show').css('display','none');
+                      }else{
+                                 $('.umbrellacode_show').css('display','block');
+                      }
+
+                    });
+
+                    });
 
                 },
                 error: function (xhr, status, error) {
@@ -99,115 +128,73 @@
             });
         }
 
-       function showPost() {
-
-        //주소 input html 부분
-
-        $('.daum_post').html(`
-            <input type="text" id="postcode" placeholder="우편번호">
-            <input type="button" onclick="execDaumPostcode()" value="우편번호 찾기"><br>
-            <input type="text" name="afterAddr1" id="address" placeholder="주소"><br>
-            <input type="text" name="afterAddr2" id="detailAddress" placeholder="상세주소">
-            <input type="text" id="extraAddress" placeholder="참고항목">
-
-        `);
-    }
-
-
-    function execDaumPostcode() {
-        new daum.Postcode({
-            oncomplete: function(data) {
-
-                var addr = ''; // 주소 변수
-                var extraAddr = ''; // 참고항목 변수
-
-
-                if (data.userSelectedType === 'R') { // 사용자가 도로명 주소를 선택했을 경우
-                    addr = data.roadAddress;
-                } else { // 사용자가 지번 주소를 선택했을 경우(J)
-                    addr = data.jibunAddress;
-                }
-
-                if(data.userSelectedType === 'R'){
-                    if(data.bname !== '' && /[동|로|가]$/g.test(data.bname)){
-                        extraAddr += data.bname;
-                    }
-                    if(data.buildingName !== '' && data.apartment === 'Y'){
-                        extraAddr += (extraAddr !== '' ? ', ' + data.buildingName : data.buildingName);
-                    }
-                    if(extraAddr !== ''){
-                        extraAddr = ' (' + extraAddr + ')';
-                    }
-                    document.getElementById("extraAddress").value = extraAddr;
-
-                } else {
-                    document.getElementById("extraAddress").value = '';
-                }
-
-                document.getElementById('postcode').value = data.zonecode;
-                document.getElementById("address").value = addr;
-                document.getElementById("detailAddress").focus();
-            }
-        }).open();
-    }
-
 
     function updateLockerDetailPOST() {
 
         var lockercode = $('input[name=lockercode]').val();
-        var beforeAddr = $('input[name=beforeAddr]').val();
-        var afterAddr1 = $('input[name=afterAddr1]').val();
-        var afterAddr2 = $('input[name=afterAddr2]').val();
-        var afterAddr = afterAddr1 + " " + afterAddr2;
+        var lockerDetailcode = $('input[name=lockerDetailcode]').val();
+        var lockerStatus = $('input[type=radio][name=lockerStatus]:checked').val();
+        var umbrellacode = $('input[name=umbrellacode]').val();
+        var lockerPw = $('input[name=lockerPw]').val();
 
 
+        //유효성 검사
+        var pwCheck = false;
 
-        // 유효성 검사
-
-
-
-            if (afterAddr1 === undefined || afterAddr1 === "" || afterAddr1 === null) {
-                console.log("주소변경안함");
-                $.ajax({
-                    type: 'POST',
-                    url: '/update-locker-post',
-                    async: false,
-                    data: { lockercode: lockercode, lockerAddr: beforeAddr },
-                    success: function (data) {
-                        alert("수정 완료되었습니다.");
-                        $('#ajaxSection').html(data);
-                    },
-                    error: function (jqXHR, status, error) {
-                        alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-
-                    }
-
-                });
-            } else {
-                console.log("주소변경");
-
-                if (afterAddr1 !== null && afterAddr1 !== "") {
-                    if (afterAddr2 === null || afterAddr2 === "") {
-                        alert("변경할 보관함의 상세주소를 입력해주세요.");
-                        return false;
-                    }
-                }
-                $.ajax({
-                    type: 'POST',
-                    url: '/update-locker-post',
-                    async: false,
-                    data: { lockercode: lockercode, lockerAddr: afterAddr },
-                    success: function (data) {
-                        alert("수정 완료되었습니다.");
-                        $('#ajaxSection').html(data);
-                    },
-                    error: function (jqXHR, status, error) {
-                        alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
-
-                    }
-                });
+            if(lockerPw===undefined||lockerPw===null||lockerPw==""){
+                alert("비밀번호는 필수입니다.");
+                return false;
+            }else{
+                pwCheck = true;
             }
 
+            if(lockerStatus==1&&(umbrellacode === null||umbrellacode == "")){
+                console.log("a");
+                alert("보관시 우산코드는 필수입니다.");
+                return false;
+            }else if(lockerStatus==1&&umbrellacode!==null){
+                 console.log("b");
+                $.ajax({
+                    type: 'POST',
+                    url: '/countUmbrellacodeisUsedTo',
+                    data: { umbrellacode: umbrellacode },
+                    success: function (data) {
+                    console.log(data);
+                           if(data=="isUsedTo"){
+                                alert("이미 사용중인 우산코드입니다.");
+                           }else if(data=="isNotUsedTo"){
+                                umbrellaUsedCheck = true;
+                                if(pwCheck){
+                                    updateActionAjax(lockercode,lockerDetailcode,lockerStatus,umbrellacode,lockerPw);
+                                }
+
+                           }else if(data=="noUmbrella"){
+                                alert("등록되지 않은 우산코드입니다.");
+                           }
+                    }
+
+                });
+            }else if(lockerStatus==0){
+             console.log("c");
+                umbrellacode = null;
+                if(pwCheck){
+                    updateActionAjax(lockercode,lockerDetailcode,lockerStatus,umbrellacode,lockerPw);
+                }
+            }
+
+    }
+
+    function updateActionAjax(lockercode,lockerDetailcode,lockerStatus,umbrellacode,lockerPw){
+        $.ajax({
+            type: 'POST',
+            url: '/update-lockerDetail-post',
+            async: false,
+            data: { lockercode: lockercode, lockerDetailcode: lockerDetailcode, lockerStatus: lockerStatus, umbrellacode: umbrellacode, lockerPw: lockerPw },
+            success: function (data) {
+                alert("수정 완료되었습니다.");
+                $('#ajaxSection').html(data);
+            }
+        });
     }
 
 
@@ -246,6 +233,21 @@
                         type: 'GET',
                         url: '/go_umbrella',
                         data: { umbrellacode: umbrellacode },
+                        success: function (data) {
+                            $('#ajaxSection').html(data);
+                        },
+                        error: function (jqXHR, status, error) {
+                            alert("code:"+request.status+"\n"+"message:"+request.responseText+"\n"+"error:"+error);
+
+                        }
+           });
+    }
+
+    function goLocker(){
+        $.ajax({
+                        type: 'GET',
+                        url: '/go_locker',
+                        data : "id=aa",
                         success: function (data) {
                             $('#ajaxSection').html(data);
                         },

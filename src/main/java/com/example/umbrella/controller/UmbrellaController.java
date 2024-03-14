@@ -31,6 +31,7 @@ public class UmbrellaController {
         return umbrellaService.getUmbrellaList(lockercode);
     }
 
+
     @PostMapping(value="/rental_umbrella", produces = "application/json;charset=utf-8")
     @ResponseBody
     public void rentalUmbrella(@RequestBody Map<String,Object> rentalUmbMap)
@@ -53,5 +54,6 @@ public class UmbrellaController {
 
         return umbrellaService.getMyRentalUmbList(myInfo);
     }
+
 
 }

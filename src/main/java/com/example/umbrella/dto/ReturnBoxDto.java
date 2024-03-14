@@ -1,5 +1,7 @@
 package com.example.umbrella.dto;
 
+import jakarta.annotation.Nullable;
+
 public class ReturnBoxDto {
 
     String centercode;
@@ -7,7 +9,8 @@ public class ReturnBoxDto {
     String returnBoxAddr;
     int returnUmbrellaCnt;
     String returnBoxDetailcode;
-    int umbrellacode;
+    @Nullable
+    Integer umbrellacode;
 
     public String getCentercode() {
         return centercode;
@@ -49,11 +52,12 @@ public class ReturnBoxDto {
         this.returnBoxDetailcode = returnBoxDetailcode;
     }
 
-    public int getUmbrellacode() {
+    @Nullable
+    public Integer getUmbrellacode() {
         return umbrellacode;
     }
 
-    public void setUmbrellacode(int umbrellacode) {
+    public void setUmbrellacode(@Nullable Integer umbrellacode) {
         this.umbrellacode = umbrellacode;
     }
 

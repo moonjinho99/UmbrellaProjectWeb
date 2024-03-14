@@ -43,5 +43,14 @@ public class LockerServiceImpl implements LockerService{
     public List<LockerDto> getAllLockerDetailByLockercode(String lockercode){return lockerMapper.getAllLockerDetailByLockercode(lockercode);}
     @Override
     public void deleteLockerDetailByLockerDetailcode(String lockerDetailcode){lockerMapper.deleteLockerDetailByLockerDetailcode(lockerDetailcode);}
+    @Override
+    public LockerDto getLockerDetailByLockerDetailcode(String lockerDetailcode){return lockerMapper.getLockerDetailByLockerDetailcode(lockerDetailcode);}
+    @Override
+    public void updateLockerDetailByLockerDetailcode(LockerDto lockerDetail) throws NullPointerException{lockerMapper.updateLockerDetailByLockerDetailcode(lockerDetail);}
+    @Override
+    public int checkUmbrellacodeUsed(Integer umbrellacode){return lockerMapper.checkUmbrellacodeUsed(umbrellacode);}
+    @Override
+    public String maxLockercode(String centercode){return lockerMapper.maxLockercode(centercode);}
+
 
 }

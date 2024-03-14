@@ -16,6 +16,7 @@ public class UmbrellaServiceImpl implements UmbrellaService{
 
     @Autowired
     UmbrellaMapper umbrellaMapper;
+
     @Override
     public List<UmbrellaDto> getUmbrellaList(String lockercode) {
         return umbrellaMapper.getUmbrellaList(lockercode);
@@ -30,4 +31,7 @@ public class UmbrellaServiceImpl implements UmbrellaService{
     public List<UmbrellaDto> getMyRentalUmbList(Map<String, Object> myRentalUmbMap) {
         return umbrellaMapper.getMyRentalUmbList(myRentalUmbMap);
     }
+    @Override
+    public int countUmbrella(int umbrellacode){return umbrellaMapper.countUmbrella(umbrellacode);}
+
 }
