@@ -15,8 +15,14 @@
         update umbrella set rentalId = #{rentalId}, rentalStatus = #{rentalStatus}, rentalTime = #{rentalTime}, returnTime = #{returnTime} where umbrellacode=#{umbrella_code}
     </update>
 
-    <select id="getMyRentalUmbList" parameterType="hashMap" resultType="com.example.umbrella.dto.UmbrellaDto">
-        select * from umbrella where rentalId = #{rentalId} and rentalStatus = #{rentalStatus};
-    </select>
+    <update id="updateRentalCntIncreaseApp" parameterType="hashMap">
+        update member
+        set rentalUmbCnt = rentalUmbCnt + 1
+        where id = #{rentalId};
+    </update>
 
+
+    <select id="getMyRentalUmbList" parameterType="hashMap" resultType="com.example.umbrella.dto.UmbrellaDto">
+        select * from umbrella where rentalId = #{rentalId} and rentalStatus = #{rentalStatus}
+    </select>
 </mapper>

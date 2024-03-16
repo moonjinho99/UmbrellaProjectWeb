@@ -14,8 +14,11 @@ public interface UmbrellaMapper {
 
     //우산 대여
     public void rentalUmbrella(Map<String,Object> rentalUmbMap);
+    public void updateRentalCntIncreaseApp(Map<String,Object> rentalUmbMap);
 
     //대여중인 우산 목록
     public List<UmbrellaDto> getMyRentalUmbList(Map<String,Object> myRentalUmbMap);
+
+
 
 }

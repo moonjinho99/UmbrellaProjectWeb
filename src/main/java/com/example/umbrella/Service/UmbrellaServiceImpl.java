@@ -25,6 +25,7 @@ public class UmbrellaServiceImpl implements UmbrellaService{
     @Override
     public void rentalUmbrella(Map<String, Object> rentalUmbMap) {
         umbrellaMapper.rentalUmbrella(rentalUmbMap);
+        umbrellaMapper.updateRentalCntIncreaseApp(rentalUmbMap);
     }
 
     @Override

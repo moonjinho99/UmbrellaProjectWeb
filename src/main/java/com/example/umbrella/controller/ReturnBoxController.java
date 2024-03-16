@@ -13,10 +13,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 @Controller
@@ -101,5 +104,13 @@ public class ReturnBoxController {
 
         System.out.println("============================================insertReturnBoxById 완료");
         return "/center/center_returnbox_manage";
+    }
+
+
+    @PostMapping("return_umbrella")
+    @ResponseBody
+    public void returnBoxReg(@RequestBody Map<String,Object> returnUmbMap){
+        System.out.println("받은 우산 데이터 : "+returnUmbMap.toString());
+        returnBoxService.returnBoxReg(returnUmbMap);
     }
 }

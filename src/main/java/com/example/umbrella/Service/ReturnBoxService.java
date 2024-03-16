@@ -3,6 +3,7 @@ package com.example.umbrella.Service;
 import com.example.umbrella.dto.ReturnBoxDto;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ReturnBoxService {
 
@@ -14,4 +15,7 @@ public interface ReturnBoxService {
     public String maxReturnBoxcode(String centercode);
     public void insertReturnBox(String returnBoxcode, String returnBoxAddr, String centercode);
     public void insertReturnBoxDetail(ReturnBoxDto returnBox);
+
+    public void returnBoxReg(Map<String,Object> returnUmbMap);
+
 }

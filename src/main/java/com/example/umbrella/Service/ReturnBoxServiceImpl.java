@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -32,5 +33,16 @@ public class ReturnBoxServiceImpl implements ReturnBoxService{
     public void insertReturnBox(String returnBoxcode, String returnBoxAddr, String centercode){returnBoxMapper.insertReturnBox(returnBoxcode,returnBoxAddr,centercode);}
     @Override
     public void insertReturnBoxDetail(ReturnBoxDto returnBox){returnBoxMapper.insertReturnBoxDetail(returnBox);}
+
+    //앱에서 동작하는 반납함 CRUD
+    @Override
+    public void returnBoxReg(Map<String, Object> returnUmbMap) {
+        returnBoxMapper.deleteRentalUmbrellaAppLocker(returnUmbMap);
+        returnBoxMapper.updateReturnUmbrellaStatusApp(returnUmbMap);
+        returnBoxMapper.insertReturnBoxDetailApp(returnUmbMap);
+        returnBoxMapper.updateReturnBoxCntApp(returnUmbMap);
+        returnBoxMapper.updateRentalCntDecreaseApp(returnUmbMap);
+    }
+
 
 }

@@ -30,4 +30,30 @@
     </insert>
 
 
+
+<!--앱 우산 반납 처리 -->
+    <delete id="deleteRentalUmbrellaAppLocker" parameterType="hashMap">
+        delete from lockerdetail where umbrellacode = #{umbrellacode}
+    </delete>
+
+    <update id="updateReturnUmbrellaStatusApp" parameterType="hashMap">
+        update umbrella set rentalStatus = 2 where umbrellacode = #{umbrellacode}
+    </update>
+
+    <insert id="insertReturnBoxDetailApp" parameterType="hashMap">
+        insert into returnBoxDetail values(#{returnBoxDetailcode}, #{umbrellacode}, #{returnBoxcode})
+    </insert>
+
+    <update id="updateRentalCntDecreaseApp" parameterType="hashMap">
+        update member
+        set rentalUmbCnt = rentalUmbCnt - 1
+        where id = #{memberId};
+    </update>
+
+    <update id="updateReturnBoxCntApp" parameterType="hashMap">
+        update returnBox
+        set returnUmbrellaCnt = returnUmbrellaCnt + 1
+        where returnBoxcode = #{returnBoxcode};
+    </update>
+
 </mapper>
