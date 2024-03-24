@@ -32,6 +32,11 @@
         insert into member (id, pw, name, phone) values (
         #{id}, #{pw}, #{name}, #{phone})
     </insert>
+    
+    <!--비밀번호 변경(앱)-->
+    <update id="pwUpdate">
+        update member set pw = #{pw} where id = #{id}
+    </update>
 
     <!-- center 테이블에 정보 등록 -->
     <insert id="createCenter" parameterType="com.example.umbrella.dto.CenterDto">

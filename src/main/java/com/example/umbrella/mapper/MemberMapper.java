@@ -26,6 +26,9 @@ public interface MemberMapper {
     // 회원가입(앱)
     void joinUser(MemberDto member);
 
+    // 비밀번호 변경(앱)
+    int pwUpdate(MemberDto member);
+
     // center 테이블에 정보 등록
     void createCenter(CenterDto center);
 

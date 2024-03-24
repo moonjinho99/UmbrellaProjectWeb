@@ -140,6 +140,66 @@ public class MemberController {
         }
     }
 
+    // 비밀번호 변경 시 입력한 비밀번호 일치 여부 확인(앱)
+    @PostMapping(value = "/pw-check", produces = "application/json;charset=utf-8")
+    @ResponseBody
+    public String pwCheck(@RequestBody MemberDto memberDto) {
+
+        System.out.println("<<< 비밀번호 변경(앱) >>>");
+        System.out.println("접속 중인 아이디 : " + memberDto.getId());
+        System.out.println("입력한 비밀번호 : " + memberDto.getPw());
+
+        MemberDto mvo = memberService.memberLogin(memberDto);  // 입력한 아이디와 일치하는 DB상의 아이디가 있는지 확인
+
+        String rawPw = "";
+        String encodePw = "";
+
+        if (mvo != null) {  // 아이디 일치
+            rawPw = memberDto.getPw(); // 입력한 비밀번호
+            encodePw = mvo.getPw(); // DB에 저장된 비밀번호(암호화)
+            System.out.println("rawPw : " + rawPw);
+            System.out.println("encodePw : " + encodePw);
+
+            if (passwordEncoding().matches(rawPw, encodePw)) { // 비밀번호 일치
+                mvo.setPw("");
+                return "success";
+            } else {
+                return "fail";
+            }
+        } else {
+            return "fail";
+        }
+    }
+
+    // 비밀번호 변경(앱)
+    @PostMapping(value = "/pw-update", produces = "application/json;charset=utf-8")
+    @ResponseBody
+    public String pwUpdate(@RequestBody MemberDto memberDto) {
+
+        System.out.println("<<< 비밀번호 변경(앱) >>>");
+        System.out.println("접속 중인 아이디 : " + memberDto.getId());
+        System.out.println("입력한 새로운 비밀번호 : " + memberDto.getPw());
+
+        String rawPw = ""; // 인코딩 전 비밀번호
+        String encodePw = ""; // 인코딩 후 비밀번호
+
+        rawPw = memberDto.getPw(); // 입력한 비밀번호
+        encodePw = passwordEncoding().encode(rawPw); // 비밀번호 인코딩
+        System.out.println("rawPw : " + rawPw);
+        System.out.println("encodePw : " + encodePw);
+
+        memberDto.setPw(encodePw);
+
+        int result = memberService.pwUpdate(memberDto);
+        System.out.println("result : " + result);
+
+        if (result != 1) {  // 비밀번호 변경 실패 시
+            return "fail";
+        } else {
+            return "success";
+        }
+    }
+
     // 로그인 페이지
     @GetMapping(value = "/umbrella-login")
     public String loginView() {

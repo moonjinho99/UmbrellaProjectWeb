@@ -51,6 +51,12 @@ public class MemberServiceImpl implements MemberService {
         memberMapper.joinUser(member);
     }
 
+    // 비밀번호 변경(앱)
+    @Override
+    public int pwUpdate(MemberDto member) {
+        return memberMapper.pwUpdate(member);
+    }
+
     // center 테이블에 정보 등록
     @Override
     public void createCenter(CenterDto center) {
